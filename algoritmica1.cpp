@@ -179,7 +179,128 @@ void cerrarSesion() {
     getch();
     system("cls");
 }
+/*
+    Juego de Cuatro en Raya
+*/
+// Definición de constantes
+const int FILAS = 6;
+const int COLUMNAS = 7;
+char tablero[FILAS][COLUMNAS];
+// Función para inicializar el tablero
+void inicializarTablero4EnRaya() {
+    for (int i = 0; i < FILAS; ++i)
+        for (int j = 0; j < COLUMNAS; ++j)
+            tablero[i][j] = ' ';
+}
+// Función para imprimir el tablero
+void imprimirTablero4enRaya() {
+    system("cls"); // En Windows usa "cls"
+    for (int i = 0; i < FILAS; ++i) {
+        cout << "|";
+        for (int j = 0; j < COLUMNAS; ++j)
+            cout << tablero[i][j] << "|";
+        cout << "\n";
+    }
+    cout << " ";
+    for (int j = 0; j < COLUMNAS; ++j)
+        cout << j << " ";
+    cout << endl;
+}
+// Función para insertar una ficha en el tablero
+bool insertarFicha(int columna, char ficha) {
+    if (columna < 0 || columna >= COLUMNAS)
+        return false;
+    for (int i = FILAS - 1; i >= 0; --i) {
+        if (tablero[i][columna] == ' ') {
+            tablero[i][columna] = ficha;
+            return true;
+        }
+    }
+    return false;
+}
+// Función para verificar si hay un ganador
+bool hayGanador(char ficha) {
+    // Horizontal
+    for (int i = 0; i < FILAS; ++i)
+        for (int j = 0; j <= COLUMNAS - 4; ++j)
+            if (tablero[i][j] == ficha && tablero[i][j+1] == ficha &&
+                tablero[i][j+2] == ficha && tablero[i][j+3] == ficha)
+                return true;
 
+    // Vertical
+    for (int j = 0; j < COLUMNAS; ++j)
+        for (int i = 0; i <= FILAS - 4; ++i)
+            if (tablero[i][j] == ficha && tablero[i+1][j] == ficha &&
+                tablero[i+2][j] == ficha && tablero[i+3][j] == ficha)
+                return true;
+
+    // Diagonal ↘
+    for (int i = 0; i <= FILAS - 4; ++i)
+        for (int j = 0; j <= COLUMNAS - 4; ++j)
+            if (tablero[i][j] == ficha && tablero[i+1][j+1] == ficha &&
+                tablero[i+2][j+2] == ficha && tablero[i+3][j+3] == ficha)
+                return true;
+
+    // Diagonal ↙
+    for (int i = 3; i < FILAS; ++i)
+        for (int j = 0; j <= COLUMNAS - 4; ++j)
+            if (tablero[i][j] == ficha && tablero[i-1][j+1] == ficha &&
+                tablero[i-2][j+2] == ficha && tablero[i-3][j+3] == ficha)
+                return true;
+
+    return false;
+}
+bool tableroLleno() {
+    for (int j = 0; j < COLUMNAS; ++j)
+        if (tablero[0][j] == ' ')
+            return false;
+    return true;
+}
+// Función para la computadora, elige una columna aleatoria
+int elegirColumnaComputadora() {
+    int columna;
+    do {
+        columna = rand() % COLUMNAS;  // Elige una columna aleatoria
+    } while (!insertarFicha(columna, 'O'));  // Asegura que la columna no esté llena
+    return columna;
+}
+// Función para jugar Cuatro en Raya
+void playCuatroEnRaya() {
+    system("cls");
+    inicializarTablero4EnRaya();
+    char jugador = 'X';
+    bool juegoTerminado = false;
+
+    while (!juegoTerminado) {
+        imprimirTablero4enRaya();
+        int columna;
+        if (jugador == 'X') {
+            cout << "Turno del Jugador (X). Elija una columna (0-6): ";
+            cin >> columna;
+        } else {
+            columna = elegirColumnaComputadora();
+            cout << "Turno de la Computadora (O). Columna elegida: " << columna << endl;
+        }
+
+        if (insertarFicha(columna, jugador)) {
+            if (hayGanador(jugador)) {
+                imprimirTablero4enRaya();
+                cout << "¡El jugador " << jugador << " ha ganado!" << endl;
+                juegoTerminado = true;
+            } else if (tableroLleno()) {
+                imprimirTablero4enRaya();
+                cout << "¡Es un empate!" << endl;
+                juegoTerminado = true;
+            }
+            jugador = (jugador == 'X') ? 'O' : 'X';  // Cambia de turno
+        } else {
+            cout << "Columna llena. Intente nuevamente." << endl;
+        }
+    }
+    cout << "Presione cualquier tecla para continuar...";
+    getch();
+    system("cls");
+}
 /*
     Juego de Snake
 */
@@ -241,7 +362,7 @@ void DrawBoard(const vector<pair<int, int>>& snake, int score) {
 }
 
 // Función para mostrar el menú principal
-void ShowMenu() {
+void ShowMenuSnake() {
     cout << "\n\n";
     cout << "======================================\n";
     cout << "           JUEGO DE SNAKE             \n";
@@ -362,7 +483,7 @@ void game() {
 
 void playSnake() {
     system("cls");
-    ShowMenu();
+    ShowMenuSnake();
     game();
     cout << "Gracias por jugar, " << playerName << "!" << endl;
     cout << "Presiona cualquier tecla para salir...";
@@ -496,9 +617,10 @@ void PageStore() {
         cout << BLUE << "=================" << RESET << endl;
         cout << "1. Juego de Snake  (20$)" << endl;
         cout << "2. Juego de Sudoku  (20$)"  << endl;
-        cout << "3. Ver el carrito" << endl;
-        cout << "4. Pagar el carrito" << endl;
-        cout << "5. Volver al menú principal" << endl;
+        cout << "3. Juego de Cuatro en Raya  (20$)" << endl;
+        cout << "4. Ver el carrito" << endl;
+        cout << "5. Pagar el carrito" << endl;
+        cout << "6. Volver al menú principal" << endl;
         cout << "Seleccione una opción: ";
         cin >> opcion;
         
@@ -514,6 +636,11 @@ void PageStore() {
                 carrito.push_back("Juego de Sudoku");
                 break;
             case 3:
+                cout << GREEN << "Juego de Cuatro en Raya Seleccionado." << RESET << endl;
+                cout << "Agregado al carrito." << endl;
+                carrito.push_back("Juego de Cuatro en Raya");
+                break;
+            case 4:
                 cout << YELLOW << "Carrito de Compras:" << RESET << endl;
                 cout << "===================" << endl;
                 if (carrito.empty()) {
@@ -525,7 +652,7 @@ void PageStore() {
                 }
                 cout << "===================" << endl;
                 break;
-            case 4:
+            case 5:
                 if (carrito.empty()) {
                     cout << RED << "El carrito está vacío. No hay nada que pagar." << RESET << endl;
                 } else {
@@ -550,7 +677,7 @@ void PageStore() {
                     carrito.clear();
                 }
                 break;
-            case 5:
+            case 6:
                 cout << "Volviendo al menú principal..." << endl;
                 salirTienda = false;
                 break;
@@ -559,7 +686,7 @@ void PageStore() {
                 break;
         }
         
-        if (opcion != 5) {
+        if (opcion != 6) {
             cout << "Presione cualquier tecla para continuar...";
             getch();
         }
@@ -614,6 +741,11 @@ void PageLibrary() {
                     playSnake();
                 } else if (juegoSeleccionado == "Juego de Sudoku") {
                     playSudoku();
+                }
+                else if (juegoSeleccionado == "Juego de Cuatro en Raya") {
+                    playCuatroEnRaya();
+                } else {
+                    cout << RED << "Juego no reconocido." << RESET << endl;
                 }
             } else {
                 cout << RED << "Opción no válida. Intente nuevamente." << RESET << endl;
