@@ -332,6 +332,8 @@ const int HEIGHT = 20;
 
 // Posición de la fruta
 int fruitX, fruitY;
+//Record de puntaje en snake
+int recordsnake;
 
 // Función para generar una nueva fruta en una posición aleatoria
 void GenerateFruit() {
@@ -404,7 +406,9 @@ void ShowMenuSnake() {
     cout << "3. Debes comer las frutas (representadas por 'F') para crecer.\n";
     cout << "4. Si chocas contra los bordes o contra ti mismo, pierdes.\n";
     cout << "5. El objetivo es hacer que la serpiente crezca lo más posible.\n\n";
-    
+    cout<< "\n"<<endl;
+    cout<< "\nResumen de estadisticas de: "<<playerName<<" en Snake"<<endl;
+    cout<<"Record actual obtenido : "<<recordsnake<<endl;
     cout << "Presiona cualquier tecla para comenzar...";
     getch(); 
 }
@@ -478,6 +482,7 @@ void game() {
         bool grow = false;
         if (newHeadX == fruitX && newHeadY == fruitY) {
             score += 10;
+            
             GenerateFruit();  // Nueva fruta
             grow = true;
         }
@@ -496,6 +501,14 @@ void game() {
     }
 
     cout << "\n¡Juego terminado! Puntaje final: " << score << endl;
+    if (score>recordsnake)
+    {
+        recordsnake=score;
+        cout<<"\n¡¡¡Enhorabuena!!!, nuevo record obtenido..."<<endl;
+            cout<<"\nRecord actual : "<<recordsnake<<endl;
+    } else {
+        cout<<"\nRecord actual : "<<recordsnake<<endl;
+    }
     getch();
 }
 
