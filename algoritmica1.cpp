@@ -22,6 +22,9 @@ struct Usuario {
     Usuario(string user = "", string pass = "") : username(user), password(pass) {}
 };
 
+//Nombre del jugador
+string playerName;
+
 // Vector para almacenar múltiples usuarios
 vector<Usuario> usuarios;
 int usuarioActualIndex = -1;  // -1 significa que no hay usuario logueado
@@ -186,12 +189,14 @@ void cerrarSesion() {
 const int FILAS = 6;
 const int COLUMNAS = 7;
 char tablero[FILAS][COLUMNAS];
+
 // Función para inicializar el tablero
 void inicializarTablero4EnRaya() {
     for (int i = 0; i < FILAS; ++i)
         for (int j = 0; j < COLUMNAS; ++j)
             tablero[i][j] = ' ';
 }
+
 // Función para imprimir el tablero
 void imprimirTablero4enRaya() {
     system("cls"); // En Windows usa "cls"
@@ -206,6 +211,7 @@ void imprimirTablero4enRaya() {
         cout << j << " ";
     cout << endl;
 }
+
 // Función para insertar una ficha en el tablero
 bool insertarFicha(int columna, char ficha) {
     if (columna < 0 || columna >= COLUMNAS)
@@ -218,6 +224,7 @@ bool insertarFicha(int columna, char ficha) {
     }
     return false;
 }
+
 // Función para verificar si hay un ganador
 bool hayGanador(char ficha) {
     // Horizontal
@@ -250,32 +257,46 @@ bool hayGanador(char ficha) {
 
     return false;
 }
+
 bool tableroLleno() {
     for (int j = 0; j < COLUMNAS; ++j)
         if (tablero[0][j] == ' ')
             return false;
     return true;
 }
-// Función para la computadora, elige una columna aleatoria
+
+// Función para la computadora, SOLO elige una columna aleatoria
 int elegirColumnaComputadora() {
+    srand(time(0));  // Inicializa la semilla aleatoria
     int columna;
     do {
         columna = rand() % COLUMNAS;  // Elige una columna aleatoria
-    } while (!insertarFicha(columna, 'O'));  // Asegura que la columna no esté llena
-    return columna;
+        // Verifica si la columna está disponible
+        bool columnaValida = false;
+        for (int i = 0; i < FILAS; ++i) {
+            if (tablero[i][columna] == ' ') {
+                columnaValida = true;
+                break;
+            }
+        }
+        if (columnaValida) break;
+    } while (true);
+    return columna;  // Solo devuelve la columna, NO inserta la ficha
 }
+
 // Función para jugar Cuatro en Raya
 void playCuatroEnRaya() {
     system("cls");
     inicializarTablero4EnRaya();
     char jugador = 'X';
     bool juegoTerminado = false;
+    playerName = usuarios[usuarioActualIndex].username;
 
     while (!juegoTerminado) {
         imprimirTablero4enRaya();
         int columna;
         if (jugador == 'X') {
-            cout << "Turno del Jugador (X). Elija una columna (0-6): ";
+            cout << "Turno del Jugador (" << playerName <<"). Elija una columna (0-6): ";
             cin >> columna;
         } else {
             columna = elegirColumnaComputadora();
@@ -311,9 +332,6 @@ const int HEIGHT = 20;
 
 // Posición de la fruta
 int fruitX, fruitY;
-
-//Nombre del jugador
-string playerName;
 
 // Función para generar una nueva fruta en una posición aleatoria
 void GenerateFruit() {
