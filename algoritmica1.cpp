@@ -63,13 +63,24 @@ void mostrarMenu() {
 // Función para registrar un nuevo usuario
 void PageRegister() {
     system("cls");
+
+    // Si ya hay un usuario logueado, no se permite registrar otro
+    if (usuarioActualIndex != -1) {
+        cout << YELLOW << "Ya hay un usuario logueado: " << usuarios[usuarioActualIndex].username << RESET << endl;
+        cout << "Debe cerrar sesión antes de registrar un nuevo usuario." << endl;
+        cout << "Presione cualquier tecla para continuar...";
+        getch();
+        system("cls");
+        return;
+    }
+
     string nuevoUsername, nuevoPassword;
-    
+
     cout << BLUE << "Registro de Usuario" << RESET << endl;
     cout << BLUE << "====================" << RESET << endl;
     cout << "Ingrese un nombre de usuario: ";
     cin >> nuevoUsername;
-    
+
     // Verificar si el usuario ya existe
     for (const auto& user : usuarios) {
         if (user.username == nuevoUsername) {
@@ -80,15 +91,15 @@ void PageRegister() {
             return;
         }
     }
-    
+
     cout << "Ingrese una contraseña: ";
     cin >> nuevoPassword;
-    
+
     // Crear y añadir el nuevo usuario
     Usuario nuevoUsuario(nuevoUsername, nuevoPassword);
     usuarios.push_back(nuevoUsuario);
     usuarioActualIndex = -1;
-    
+
     cout << GREEN << "\nRegistro exitoso. ¡Bienvenido, " << nuevoUsername << "!" << RESET << endl;
     cout << "Ahora puedes iniciar sesión." << endl;
     cout << BLUE << "====================" << RESET << endl;
@@ -96,6 +107,7 @@ void PageRegister() {
     getch();
     system("cls");
 }
+
 
 // Función para ver la lista de usuarios registrados
 void verUsuariosRegistrados() {
@@ -124,11 +136,22 @@ void verUsuariosRegistrados() {
 // Función para iniciar sesión
 void PageLogin() {
     system("cls");
+
+    // Si ya hay un usuario logueado, no se permite iniciar sesión de nuevo
+    if (usuarioActualIndex != -1) {
+        cout << YELLOW << "Ya hay un usuario logueado: " << usuarios[usuarioActualIndex].username << RESET << endl;
+        cout << "Debe cerrar sesión antes de iniciar sesión con otra cuenta." << endl;
+        cout << "Presione cualquier tecla para continuar...";
+        getch();
+        system("cls");
+        return;
+    }
+
     string userlog, passlog;
-    
+
     cout << BLUE << "Inicio de Sesión" << RESET << endl;
     cout << BLUE << "=================" << RESET << endl;
-    
+
     if (usuarios.empty()) {
         cout << RED << "No hay usuarios registrados. Por favor, regístrese primero." << RESET << endl;
         cout << "Presione cualquier tecla para continuar...";
@@ -136,20 +159,19 @@ void PageLogin() {
         system("cls");
         return;
     }
-    
+
     cout << "Ingrese su nombre de usuario: ";
     cin >> userlog;
-    
-    // Buscar el usuario
+
     bool usuarioEncontrado = false;
     for (size_t i = 0; i < usuarios.size(); i++) {
         if (usuarios[i].username == userlog) {
             usuarioEncontrado = true;
             cout << "Ingrese su contraseña: ";
             cin >> passlog;
-            
+
             if (usuarios[i].password == passlog) {
-                usuarioActualIndex = static_cast<int>(i);
+                usuarioActualIndex = static_cast<int>(i); // El usuario está logueado
                 cout << GREEN << "\nInicio de sesión exitoso. ¡Bienvenido, " << usuarios[i].username << "!" << RESET << endl;
             } else {
                 cout << RED << "\nContraseña incorrecta. Intente nuevamente." << RESET << endl;
@@ -157,11 +179,11 @@ void PageLogin() {
             break;
         }
     }
-    
+
     if (!usuarioEncontrado) {
         cout << RED << "\nUsuario no encontrado. Por favor, regístrese primero." << RESET << endl;
     }
-    
+
     cout << "Presione cualquier tecla para continuar...";
     getch();
     system("cls");
