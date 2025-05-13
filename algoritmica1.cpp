@@ -9,6 +9,8 @@
 #include <vector>
 #include <map>
 #include <utility>
+#include <fstream>     // Para ofstream y ifstream
+#include <sstream>     // Para stringstream
 
 using namespace std;
 
@@ -47,7 +49,8 @@ void mostrarMenu() {
     cout << GREEN << "4. Biblioteca de Juegos" << RESET << endl;
     cout << YELLOW << "5. Ver Usuarios Registrados" << RESET << endl;
     cout << RED << "6. Cerrar Sesión" << RESET << endl;
-    cout << RED << "7. Salir" << RESET << endl;
+    cout << RED << "7. Eliminar mi cuenta" << RESET << endl;
+    cout << RED << "8. Salir" << RESET << endl;
     cout << BLUE << "==========================" << RESET << endl;
     
     // Muestra el usuario actual si está logueado
@@ -59,6 +62,104 @@ void mostrarMenu() {
     
     cout << "Seleccione una opción: ";
 }
+
+//Función para guardar usuarios en archivo de texto
+void guardarUsuariosEnArchivo() {
+    ofstream archivo("usuarios.txt");
+
+    if (!archivo) {
+        cerr << "Error al abrir el archivo para guardar usuarios." << endl;
+        return;
+    }
+
+    for (const auto& user : usuarios) {
+        archivo << user.username << ";" << user.password << ";";
+
+        // Guardar juegos separados por comas
+        for (auto it = user.games.begin(); it != user.games.end(); ++it) {
+            archivo << *it;
+            if (next(it) != user.games.end()) archivo << ",";
+        }
+
+        archivo << endl;
+    }
+
+    archivo.close();
+}
+
+//Función para cargar usuarios en archivo de texto
+void cargarUsuariosDesdeArchivo() {
+    ifstream archivo("usuarios.txt");
+
+    if (!archivo) {
+        // El archivo aún no existe, no hay usuarios
+        return;
+    }
+
+    usuarios.clear();
+    string linea;
+
+    while (getline(archivo, linea)) {
+        stringstream ss(linea);
+        string username, password, juegosStr;
+
+        getline(ss, username, ';');
+        getline(ss, password, ';');
+        getline(ss, juegosStr);
+
+        Usuario user(username, password);
+
+        stringstream juegosStream(juegosStr);
+        string juego;
+
+        while (getline(juegosStream, juego, ',')) {
+            if (!juego.empty()) {
+                user.games.push_back(juego);
+            }
+        }
+
+        usuarios.push_back(user);
+    }
+
+    archivo.close();
+}
+
+//Función para eliminar la cuenta actual
+void eliminarCuentaActual() {
+    system("cls");
+
+    if (usuarioActualIndex == -1) {
+        cout << YELLOW << "No hay ninguna sesión activa." << RESET << endl;
+        cout << "Presione cualquier tecla para continuar...";
+        getch();
+        system("cls");
+        return;
+    }
+
+    string nombre = usuarios[usuarioActualIndex].username;
+
+    cout << RED << "Estás a punto de eliminar tu cuenta: " << nombre << RESET << endl;
+    cout << "Esta acción no se puede deshacer." << endl;
+    cout << "¿Estás seguro de que deseas continuar? (s/n): ";
+
+    char confirmacion;
+    cin >> confirmacion;
+
+    if (confirmacion == 's' || confirmacion == 'S') {
+        usuarios.erase(usuarios.begin() + usuarioActualIndex);
+        usuarioActualIndex = -1;
+        guardarUsuariosEnArchivo();
+
+        cout << GREEN << "La cuenta ha sido eliminada exitosamente." << RESET << endl;
+    } else {
+        cout << YELLOW << "Operación cancelada. Tu cuenta no fue eliminada." << RESET << endl;
+    }
+
+    cout << "Presione cualquier tecla para continuar...";
+    getch();
+    system("cls");
+}
+
 
 // Función para registrar un nuevo usuario
 void PageRegister() {
@@ -133,7 +234,6 @@ void verUsuariosRegistrados() {
     system("cls");
 }
 
-// Función para iniciar sesión
 void PageLogin() {
     system("cls");
 
@@ -263,14 +363,14 @@ bool hayGanador(char ficha) {
                 tablero[i+2][j] == ficha && tablero[i+3][j] == ficha)
                 return true;
 
-    // Diagonal ↘
+    // Diagonal ?
     for (int i = 0; i <= FILAS - 4; ++i)
         for (int j = 0; j <= COLUMNAS - 4; ++j)
             if (tablero[i][j] == ficha && tablero[i+1][j+1] == ficha &&
                 tablero[i+2][j+2] == ficha && tablero[i+3][j+3] == ficha)
                 return true;
 
-    // Diagonal ↙
+    // Diagonal ?
     for (int i = 3; i < FILAS; ++i)
         for (int j = 0; j <= COLUMNAS - 4; ++j)
             if (tablero[i][j] == ficha && tablero[i-1][j+1] == ficha &&
@@ -814,18 +914,21 @@ int main() {
     
     int opcion;
     
+    cargarUsuariosDesdeArchivo();
     do {
         mostrarMenu();
         cin >> opcion;
         switch (opcion) {
             case 1: 
                 PageRegister();
+                guardarUsuariosEnArchivo();
                 break;
             case 2: 
                 PageLogin();
                 break;
             case 3: 
                 PageStore();
+                guardarUsuariosEnArchivo();
                 break;
             case 4: 
                 PageLibrary();
@@ -835,8 +938,12 @@ int main() {
                 break;
             case 6:
                 cerrarSesion();
+                guardarUsuariosEnArchivo();
                 break;
-            case 7: 
+            case 7:
+    			eliminarCuentaActual();
+   				break;
+            case 8: 
                 cout << RED << "\nSaliendo de la aplicación. ¡Hasta pronto!\n" << RESET << endl;
                 break;
             default:
