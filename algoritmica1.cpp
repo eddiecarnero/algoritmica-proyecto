@@ -952,10 +952,10 @@ int main() {
                 getch();
                 system("cls");
         }
-        if (opcion != 7) {
+        if (opcion != 8) {
             system("cls");
 }
-    } while (opcion != 7);
+    } while (opcion != 8);
 
     return 0;
 }
