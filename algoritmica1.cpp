@@ -311,6 +311,7 @@ void cerrarSesion() {
 const int FILAS = 6;
 const int COLUMNAS = 7;
 char tablero[FILAS][COLUMNAS];
+int vecesganadas;
 
 // Función para inicializar el tablero
 void inicializarTablero4EnRaya() {
@@ -332,6 +333,11 @@ void imprimirTablero4enRaya() {
     for (int j = 0; j < COLUMNAS; ++j)
         cout << j << " ";
     cout << endl;
+    cout << "\n\n";
+    cout << "=============================================================";
+    cout<< "\nResumen de estadisticas de: "<<playerName<<" en 4 en raya"<<endl;
+    cout<<"Record actual obtenido : "<<vecesganadas<<" veces ganadas"<<endl;
+    cout << "============================================================="<<endl;
 }
 
 // Función para insertar una ficha en el tablero
@@ -429,6 +435,8 @@ void playCuatroEnRaya() {
             if (hayGanador(jugador)) {
                 imprimirTablero4enRaya();
                 cout << "¡El jugador " << jugador << " ha ganado!" << endl;
+                vecesganadas++;
+                cout<<"\nRecord de victorias: "<<vecesganadas<<endl;
                 juegoTerminado = true;
             } else if (tableroLleno()) {
                 imprimirTablero4enRaya();
@@ -647,7 +655,7 @@ void playSnake() {
 /*
     Juego de Sudoku
 */
-
+int recordsudoku;
 void imprimirTablero(const int tablero[9][9]) {
     for (int i = 0; i < 9; i++) {
         if (i % 3 == 0 && i != 0) {
@@ -745,6 +753,8 @@ void playSudoku() {
     }
 
     cout << GREEN << "¡FELICIDADES COMPLETASTE EL SUDOKU!" << RESET << endl;
+    recordsudoku++;
+    cout<<"Record actual : "<<recordsudoku<<endl;
     imprimirTablero(tablero);
     cout << "Presiona cualquier tecla para salir...";
     getch();
