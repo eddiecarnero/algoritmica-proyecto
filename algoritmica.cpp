@@ -1141,23 +1141,20 @@ void PageLibrary() {
 }
 
 
-
-
-
-
-
-
-
-
 int main() {
     srand(static_cast<unsigned int>(time(nullptr)));
-
+    cargarUsuariosDesdeArchivo();
     int opcion;
 
-    cargarUsuariosDesdeArchivo();
     do {
-        mostrarMenu();
+        // Menú inicial
+        cout << BLUE << "====== PLATAFORMA DE JUEGOS ======" << RESET << endl;
+        cout << GREEN << "1. Registrarse" << RESET << endl;
+        cout << YELLOW << "2. Iniciar Sesión" << RESET << endl;
+        cout << RED << "3. Salir" << RESET << endl;
+        cout << "Seleccione una opción: ";
         cin >> opcion;
+
         switch (opcion) {
             case 1:
                 PageRegister();
@@ -1165,37 +1162,63 @@ int main() {
                 break;
             case 2:
                 PageLogin();
+                if (usuarioActualIndex != -1) {
+                    // Usuario logueado, pasar al menú interno
+                    int opcionUsuario;
+                    do {
+                        system("cls");
+                        cout << BLUE << "\n====== MENU DE USUARIO ======" << RESET << endl;
+                        cout << "Bienvenido, " << usuarios[usuarioActualIndex].username << endl;
+                        cout << GREEN << "1. Tienda de Juegos" << RESET << endl;
+                        cout << GREEN << "2. Biblioteca de Juegos" << RESET << endl;
+                        cout << GREEN << "3. Ver Usuarios Registrados" << RESET << endl;
+                        cout << RED << "4. Cerrar Sesión" << RESET << endl;
+                        cout << RED << "5. Eliminar mi cuenta" << RESET << endl;
+                        cout << RED << "6. Salir del Programa" << RESET << endl;
+                        cout << "Seleccione una opción: ";
+                        cin >> opcionUsuario;
+
+                        switch (opcionUsuario) {
+                            case 1:
+                                PageStore();
+                                guardarUsuariosEnArchivo();
+                                break;
+                            case 2:
+                                PageLibrary();
+                                break;
+                            case 3:
+                                verUsuariosRegistrados();
+                                break;
+                            case 4:
+                                cerrarSesion();
+                                opcionUsuario = 6;  // salir del menú de usuario
+                                break;
+                            case 5:
+                                eliminarCuentaActual();
+                                opcionUsuario = 6;  // salir del menú si se elimina
+                                break;
+                            case 6:
+                                cout << RED << "\nSaliendo del sistema...\n" << RESET << endl;
+                                opcion=3;
+                                break;
+                            default:
+                                cout << RED << "\nOpción inválida.\n" << RESET << endl;
+                                getch();
+                        }
+
+                    } while (opcionUsuario != 6 && usuarioActualIndex != -1);
+                }
                 break;
             case 3:
-                PageStore();
-                guardarUsuariosEnArchivo();
-                break;
-            case 4:
-                PageLibrary();
-                break;
-            case 5:
-                verUsuariosRegistrados();
-                break;
-            case 6:
-                cerrarSesion();
-                guardarUsuariosEnArchivo();
-                break;
-            case 7:
-    			eliminarCuentaActual();
-   				break;
-            case 8:
-                cout << RED << "\nSaliendo de la aplicación. ¡Hasta pronto!\n" << RESET << endl;
+                cout << RED << "\nSaliendo del programa...\n" << RESET << endl;
                 break;
             default:
-                cout << RED << "\nOpción no válida. Intente nuevamente.\n" << RESET << endl;
-                cout << "Presione cualquier tecla para continuar...";
+                cout << RED << "\nOpción no válida.\n" << RESET << endl;
                 getch();
-                system("cls");
         }
-        if (opcion != 8) {
-            system("cls");
-}
-    } while (opcion != 8);
+        system("cls");
+    } while (opcion != 3);
 
     return 0;
 }
+
