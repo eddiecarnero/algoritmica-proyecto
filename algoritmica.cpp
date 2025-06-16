@@ -15,7 +15,7 @@
 
 using namespace std;
 
-// Función segura para convertir string a int
+// Funcion segura para convertir string a int
 int stringToIntSafe(const string& str) {
     if (str.empty()) {
         return 0;
@@ -30,7 +30,7 @@ int stringToIntSafe(const string& str) {
         return 0;
     }
 
-    // Verificar que solo contenga dígitos (y opcionalmente signo negativo)
+    // Verificar que solo contenga digitos (y opcionalmente signo negativo)
     bool hasDigits = false;
     for (size_t i = 0; i < cleanStr.length(); i++) {
         if (i == 0 && (cleanStr[i] == '-' || cleanStr[i] == '+')) {
@@ -39,7 +39,7 @@ int stringToIntSafe(const string& str) {
         if (isdigit(cleanStr[i])) {
             hasDigits = true;
         } else {
-            return 0; // Carácter inválido encontrado
+            return 0; // Caracter invalido encontrado
         }
     }
 
@@ -75,7 +75,7 @@ struct Compra {
     string numeroTransaccion;
 };
 
-// Estructura para almacenar información del usuario
+// Estructura para almacenar informacion del usuario
 struct Usuario {
     string username;
     string password;
@@ -104,7 +104,7 @@ struct Usuario {
         colorPreferido("\033[32m"), biografia("Nuevo jugador"), totalGastado(0.0) {}
 };
 
-// Función para actualizar record de un usuario
+// Funcion para actualizar record de un usuario
 void actualizarRecord(Usuario &user, const string &juego, int puntuacion) {
     #define GREEN "\033[32m"
     #define RESET "\033[0m"
@@ -115,7 +115,7 @@ void actualizarRecord(Usuario &user, const string &juego, int puntuacion) {
     
     if (user.puntuaciones.find(juego) == user.puntuaciones.end() || puntuacion > user.puntuaciones[juego]) {
         user.puntuaciones[juego] = puntuacion;
-        cout << GREEN << "¡Nuevo record en " << juego << ": " << puntuacion << "!" << RESET << endl;
+        cout << GREEN << "Nuevo record en " << juego << ": " << puntuacion << "!" << RESET << endl;
     } else {
         cout << YELLOW << "PuntuaciOn: " << puntuacion << " (Record actual: " << user.puntuaciones[juego] << ")" << RESET << endl;
     }
@@ -125,7 +125,7 @@ string playerName;
 vector<Usuario> usuarios;
 int usuarioActualIndex = -1;
 
-// Códigos de colores ANSI
+// Codigos de colores ANSI
 #define RESET "\033[0m"
 #define RED "\033[31m"
 #define GREEN "\033[32m"
@@ -267,7 +267,7 @@ string generarNumeroTransaccion() {
 }
 
 // Funcion para simular verificacion con banco
-bool verificarTarjetaConBanco(const TarjetaCredito& tarjeta) {
+bool verificarTarjetaConBanco(const TarjetaCredito) {
     cout << YELLOW << "Conectando con el banco";
     for (int i = 0; i < 5; i++) {
         cout << ".";
@@ -397,30 +397,30 @@ pair<bool, string> procesarPagoTarjeta(double monto) {
     return make_pair(false, "");
 }
 
-// Función para dibujar figuras ASCII para avatares
+// Funcion para dibujar figuras ASCII para avatares
 vector<string> obtenerFigurasAscii() {
     vector<string> figuras = {
         "[*]",      // Estrella simple
         "[@]",      // Arroba
         "[#]",      // Numeral
-        "[+]",      // Signo más
-        "[O]",      // Círculo
+        "[+]",      // Signo mas
+        "[O]",      // Circulo
         "[X]",      // X
-        "[!]",      // Exclamación
-        "[?]",      // Interrogación
+        "[!]",      // Exclamacion
+        "[?]",      // Interrogacion
         "<|>",      // Flecha
         "{*}",      // Estrella con llaves
-        "(*)",      // Estrella con paréntesis
-        "/|\\",     // Triángulo
+        "(*)",      // Estrella con parentesis
+        "/|\\",     // Triangulo
         "\\o/",     // Persona con brazos levantados
         "-o-",      // Persona con brazos extendidos
         "<==>",     // Doble flecha
         "[:)]",     // Cara feliz
         "[:(]",     // Cara triste
-        "[<3]",     // Corazón
+        "[<3]",     // Corazon
         "[^^]",     // Ojos felices
-        "[--]",     // Línea
-        "[==]",     // Doble línea
+        "[--]",     // Linea
+        "[==]",     // Doble linea
         "[:::]",    // Puntos
         "[%%%]",    // Porcentaje
         "[###]"     // Triple numeral
@@ -428,12 +428,12 @@ vector<string> obtenerFigurasAscii() {
     return figuras;
 }
 
-// Función para mostrar una figura ASCII con color
+// Funcion para mostrar una figura ASCII con color
 void mostrarFiguraAscii(const string& figura, const string& color) {
     cout << color << figura << RESET;
 }
 
-// Función para personalizar perfil
+// Funcion para personalizar perfil
 void personalizarPerfil() {
     if (usuarioActualIndex == -1) {
         cout << RED << "Debe iniciar sesion primero." << RESET << endl;
@@ -497,7 +497,7 @@ void personalizarPerfil() {
                     user.avatar = figuras[seleccion-1];
                     cout << GREEN << "Avatar actualizado a " << user.colorPreferido << user.avatar << RESET << endl;
                 } else {
-                    cout << RED << "Seleccion inválida." << RESET << endl;
+                    cout << RED << "Seleccion invalida." << RESET << endl;
                 }
                 break;
             }
@@ -531,7 +531,7 @@ void personalizarPerfil() {
                         break;
                     }
                     default:
-                        cout << RED << "Opción invalida." << RESET << endl;
+                        cout << RED << "Opcion invalida." << RESET << endl;
                         continue;
                 }
                 cout << GREEN << "Estado actualizado a: " << user.estado << RESET << endl;
@@ -574,7 +574,7 @@ void personalizarPerfil() {
                 cout << BLUE << "=================" << RESET << endl;
                 
                 cout << "Biografia actual: " << user.biografia << endl;
-                cout << "\nIngrese su nueva biografia (máximo 100 caracteres): ";
+                cout << "\nIngrese su nueva biografia (maximo 100 caracteres): ";
                 cin.ignore();
                 getline(cin, user.biografia);
                 
@@ -595,10 +595,10 @@ void personalizarPerfil() {
                 cout << "Avatar: " << user.colorPreferido << user.avatar << RESET << endl;
                 cout << "Usuario: " << user.colorPreferido << user.username << RESET << endl;
                 cout << "Estado: " << user.estado << endl;
-                cout << "Biografía: " << user.biografia << endl;
-                cout << "\n" << BLUE << "ESTADÍSTICAS:" << RESET << endl;
+                cout << "Biografia: " << user.biografia << endl;
+                cout << "\n" << BLUE << "ESTADiSTICAS:" << RESET << endl;
                 cout << "Partidas jugadas: " << user.totalPartidas << endl;
-                cout << "Puntuación total: " << user.puntuacionTotal << endl;
+                cout << "Puntuacion total: " << user.puntuacionTotal << endl;
                 cout << "Amigos: " << user.amigos.size() << endl;
                 
                 if (user.totalPartidas > 0) {
@@ -610,7 +610,7 @@ void personalizarPerfil() {
                     cout << YELLOW << "No tienes juegos en tu biblioteca." << RESET << endl;
                 } else {
                     for (const auto& game : user.games) {
-                        cout << "• " << game;
+                        cout << "� " << game;
                         if (user.puntuaciones.count(game)) {
                             cout << " (Record: " << user.puntuaciones.at(game) << ")";
                         }
@@ -623,7 +623,7 @@ void personalizarPerfil() {
                     cout << YELLOW << "No tienes amigos en tu lista." << RESET << endl;
                 } else {
                     for (const auto& amigo : user.amigos) {
-                        cout << "• " << amigo << endl;
+                        cout << "� " << amigo << endl;
                     }
                 }
                 break;
@@ -632,7 +632,7 @@ void personalizarPerfil() {
                 salirPersonalizacion = true;
                 break;
             default:
-                cout << RED << "Opción invalida." << RESET << endl;
+                cout << RED << "Opcion invalida." << RESET << endl;
         }
         
         if (opcion != 6) {
@@ -642,10 +642,10 @@ void personalizarPerfil() {
     }
 }
 
-// Función para gestionar amigos
+// Funcion para gestionar amigos
 void gestionarAmigos() {
     if (usuarioActualIndex == -1) {
-        cout << RED << "Debe iniciar sesión primero." << RESET << endl;
+        cout << RED << "Debe iniciar sesion primero." << RESET << endl;
         getch();
         return;
     }
@@ -667,15 +667,15 @@ void gestionarAmigos() {
         
         cout << "\n" << BLUE << "OPCIONES:" << RESET << endl;
         cout << "1. Ver lista de amigos" << endl;
-        cout << "2. Buscar y añadir usuarios" << endl;
+        cout << "2. Buscar y anadir usuarios" << endl;
         cout << "3. Ver solicitudes pendientes" << endl;
         cout << "4. Gestionar usuarios bloqueados" << endl;
         cout << "5. Ver perfil de un amigo" << endl;
         cout << "6. Eliminar amigo" << endl;
-        cout << "7. Volver al menú principal" << endl;
+        cout << "7. Volver al menu principal" << endl;
         
         int opcion;
-        cout << "\nSeleccione una opción: ";
+        cout << "\nSeleccione una Opcion: ";
         cin >> opcion;
         
         switch (opcion) {
@@ -686,7 +686,7 @@ void gestionarAmigos() {
                 
                 if (user.amigos.empty()) {
                     cout << YELLOW << "No tienes amigos en tu lista." << RESET << endl;
-                    cout << "¡Usa la opción 'Buscar y añadir usuarios' para encontrar amigos!" << endl;
+                    cout << "Usa la Opcion 'Buscar y anadir usuarios' para encontrar amigos!" << endl;
                 } else {
                     cout << "Tienes " << user.amigos.size() << " amigo(s):\n\n";
                     
@@ -694,7 +694,7 @@ void gestionarAmigos() {
                         const string& amigo = user.amigos[i];
                         cout << i+1 << ". " << amigo;
                         
-                        // Buscar información del amigo
+                        // Buscar informacion del amigo
                         for (const auto& u : usuarios) {
                             if (u.username == amigo) {
                                 cout << " " << u.avatar << " - " << u.estado;
@@ -709,7 +709,7 @@ void gestionarAmigos() {
             }
             case 2: {
                 system("cls");
-                cout << BLUE << "Buscar y Añadir Usuarios" << RESET << endl;
+                cout << BLUE << "Buscar y anadir Usuarios" << RESET << endl;
                 cout << BLUE << "=======================" << RESET << endl;
                 
                 string busqueda;
@@ -737,7 +737,7 @@ void gestionarAmigos() {
                         cout << " - " << usuarios[i].estado;
                         cout << " (Nivel: " << (usuarios[i].totalPartidas / 10 + 1) << ")";
                         
-                        // Verificar relación actual
+                        // Verificar relacion actual
                         bool esAmigo = find(user.amigos.begin(), user.amigos.end(), usuarios[i].username) != user.amigos.end();
                         bool estaBloqueado = find(user.bloqueados.begin(), user.bloqueados.end(), usuarios[i].username) != user.bloqueados.end();
                         bool solicitudEnviada = find(usuarios[i].solicitudes.begin(), usuarios[i].solicitudes.end(), user.username) != usuarios[i].solicitudes.end();
@@ -767,9 +767,9 @@ void gestionarAmigos() {
                         cout << "Estado: " << usuarioSeleccionado.estado << endl;
                         cout << "Biografia: " << usuarioSeleccionado.biografia << endl;
                         cout << "Partidas jugadas: " << usuarioSeleccionado.totalPartidas << endl;
-                        cout << "Puntuación total: " << usuarioSeleccionado.puntuacionTotal << endl;
+                        cout << "Puntuacion total: " << usuarioSeleccionado.puntuacionTotal << endl;
                         
-                        // Verificar relación actual
+                        // Verificar relacion actual
                         bool esAmigo = find(user.amigos.begin(), user.amigos.end(), usuarioSeleccionado.username) != user.amigos.end();
                         bool estaBloqueado = find(user.bloqueados.begin(), user.bloqueados.end(), usuarioSeleccionado.username) != user.bloqueados.end();
                         bool solicitudEnviada = find(usuarioSeleccionado.solicitudes.begin(), usuarioSeleccionado.solicitudes.end(), user.username) != usuarioSeleccionado.solicitudes.end();
@@ -791,7 +791,7 @@ void gestionarAmigos() {
                         cout << "0. Volver" << endl;
                         
                         int accion;
-                        cout << "\nSeleccione una acción: ";
+                        cout << "\nSeleccione una accion: ";
                         cin >> accion;
                         
                         if (accion == 1) {
@@ -845,7 +845,7 @@ void gestionarAmigos() {
                         const string& solicitante = user.solicitudes[i];
                         cout << i+1 << ". " << solicitante;
                         
-                        // Buscar información del solicitante
+                        // Buscar informacion del solicitante
                         for (const auto& u : usuarios) {
                             if (u.username == solicitante) {
                                 cout << " " << u.avatar << " - " << u.estado;
@@ -867,7 +867,7 @@ void gestionarAmigos() {
                     cin >> accion;
                     
                     if (accion >= 1 && accion <= 3) {
-                        cout << "Ingrese el número de la solicitud: ";
+                        cout << "Ingrese el numero de la solicitud: ";
                         int numSolicitud;
                         cin >> numSolicitud;
                         
@@ -878,7 +878,7 @@ void gestionarAmigos() {
                                 // Aceptar solicitud
                                 user.amigos.push_back(solicitante);
                                 
-                                // Añadir al usuario actual como amigo del solicitante
+                                // anadir al usuario actual como amigo del solicitante
                                 for (auto& u : usuarios) {
                                     if (u.username == solicitante) {
                                         u.amigos.push_back(user.username);
@@ -889,7 +889,7 @@ void gestionarAmigos() {
                                 // Eliminar la solicitud
                                 user.solicitudes.erase(user.solicitudes.begin() + numSolicitud - 1);
                                 
-                                cout << GREEN << "¡Has aceptado la solicitud de " << solicitante << "! Ahora son amigos." << RESET << endl;
+                                cout << GREEN << "Has aceptado la solicitud de " << solicitante << "! Ahora son amigos." << RESET << endl;
                             } else if (accion == 2) {
                                 // Rechazar solicitud
                                 user.solicitudes.erase(user.solicitudes.begin() + numSolicitud - 1);
@@ -910,7 +910,7 @@ void gestionarAmigos() {
                                 }
                             }
                         } else {
-                            cout << RED << "Numero de solicitud inválido." << RESET << endl;
+                            cout << RED << "Numero de solicitud invalido." << RESET << endl;
                         }
                     }
                 }
@@ -947,7 +947,7 @@ void gestionarAmigos() {
                             user.bloqueados.erase(user.bloqueados.begin() + numUsuario - 1);
                             cout << GREEN << "Has desbloqueado a " << usuarioBloqueado << RESET << endl;
                         } else {
-                            cout << RED << "Numero inválido." << RESET << endl;
+                            cout << RED << "Numero invalido." << RESET << endl;
                         }
                     }
                 }
@@ -967,7 +967,7 @@ void gestionarAmigos() {
                         cout << i+1 << ". " << user.amigos[i] << endl;
                     }
                     
-                    cout << "\nIngrese el número del amigo: ";
+                    cout << "\nIngrese el numero del amigo: ";
                     int numAmigo;
                     cin >> numAmigo;
                     
@@ -988,7 +988,7 @@ void gestionarAmigos() {
                                 cout << "Biografia: " << u.biografia << endl;
                                 cout << "\n" << BLUE << "ESTADISTICAS:" << RESET << endl;
                                 cout << "Partidas jugadas: " << u.totalPartidas << endl;
-                                cout << "Puntuación total: " << u.puntuacionTotal << endl;
+                                cout << "Puntuacion total: " << u.puntuacionTotal << endl;
                                 
                                 if (u.totalPartidas > 0) {
                                     cout << "Promedio por partida: " << (u.puntuacionTotal / u.totalPartidas) << endl;
@@ -999,7 +999,7 @@ void gestionarAmigos() {
                                     cout << YELLOW << "No tiene records registrados." << RESET << endl;
                                 } else {
                                     for (const auto& record : u.puntuaciones) {
-                                        cout << "• " << record.first << ": " << record.second << " puntos" << endl;
+                                        cout << "� " << record.first << ": " << record.second << " puntos" << endl;
                                     }
                                 }
                                 break;
@@ -1032,7 +1032,7 @@ void gestionarAmigos() {
                     if (numAmigo > 0 && numAmigo <= static_cast<int>(user.amigos.size())) {
                         string nombreAmigo = user.amigos[numAmigo-1];
                         
-                        cout << RED << "¿Estas seguro de que quieres eliminar a " << nombreAmigo << " de tu lista de amigos? (s/n): " << RESET;
+                        cout << RED << "Estas seguro de que quieres eliminar a " << nombreAmigo << " de tu lista de amigos? (s/n): " << RESET;
                         char confirmacion;
                         cin >> confirmacion;
                         
@@ -1081,7 +1081,7 @@ void limpiarArchivoCorrupto() {
     // Eliminar archivo corrupto
     remove("usuarios.txt");
 
-    // Crear archivo nuevo vacío
+    // Crear archivo nuevo vacio
     ofstream nuevoArchivo("usuarios.txt");
     nuevoArchivo.close();
 
@@ -1245,29 +1245,23 @@ void mostrarMenu() {
     cout << YELLOW << "       PLATAFORMA DE JUEGOS          " << RESET << endl;
     cout << BLUE << "======================================" << RESET << endl;
     
-    // Sección de Usuario
-    cout << CYAN << "-- USUARIO --" << RESET << endl;
-    cout << GREEN << "1. Registrarse" << RESET << endl;
-    cout << GREEN << "2. Loguearse" << RESET << endl;
-    cout << RED << "3. Cerrar Sesion" << RESET << endl;
-    
-    // Sección de Juegos
+    // Seccion de Juegos
     cout << CYAN << "-- JUEGOS --" << RESET << endl;
-    cout << BLUE << "4. Tienda de Juegos" << RESET << endl;
-    cout << BLUE << "5. Biblioteca de Juegos" << RESET << endl;
+    cout << BLUE << "1. Tienda de Juegos" << RESET << endl;
+    cout << BLUE << "2. Biblioteca de Juegos" << RESET << endl;
     
-    // Sección Social
+    // Seccion Social
     cout << CYAN << "-- SOCIAL --" << RESET << endl;
-    cout << MAGENTA << "6. Mis Estadisticas" << RESET << endl;
-    cout << MAGENTA << "7. Ranking Global" << RESET << endl;
-    cout << MAGENTA << "8. Personalizar Perfil" << RESET << endl;
-    cout << MAGENTA << "9. Gestionar Amigos" << RESET << endl;
+    cout << MAGENTA << "3. Mis Estadisticas" << RESET << endl;
+    cout << MAGENTA << "4. Ranking Global" << RESET << endl;
+    cout << MAGENTA << "5. Personalizar Perfil" << RESET << endl;
+    cout << MAGENTA << "6. Gestionar Amigos" << RESET << endl;
     
-    // Sección Sistema
+    // Seccion Sistema
     cout << CYAN << "-- SISTEMA --" << RESET << endl;
-    cout << YELLOW << "10. Ver Usuarios Registrados" << RESET << endl;
-    cout << YELLOW << "11. Limpiar Archivo Corrupto" << RESET << endl;
-    cout << RED << "12. Salir" << RESET << endl;
+    cout << YELLOW << "7. Ver Usuarios Registrados" << RESET << endl;
+    cout << YELLOW << "8. Limpiar Archivo Corrupto" << RESET << endl;
+    cout << YELLOW << "9. Cerrar Sesion" << RESET << endl;
     cout << BLUE << "======================================" << RESET << endl;
 
     if (usuarioActualIndex != -1) {
@@ -1277,7 +1271,7 @@ void mostrarMenu() {
         cout << CYAN << "Partidas: " << currentUser.totalPartidas 
              << " | Puntos: " << currentUser.puntuacionTotal;
              
-        // Mostrar información de amigos
+        // Mostrar informacion de amigos
         if (!currentUser.amigos.empty()) {
             cout << " | Amigos: " << currentUser.amigos.size();
         }
@@ -1286,7 +1280,7 @@ void mostrarMenu() {
         
         // Notificar solicitudes pendientes
         if (!currentUser.solicitudes.empty()) {
-            cout << YELLOW << "¡Tienes " << currentUser.solicitudes.size() 
+            cout << YELLOW << "Tienes " << currentUser.solicitudes.size() 
                  << " solicitud(es) de amistad pendiente(s)!" << RESET << endl;
         }
     } else {
@@ -1296,7 +1290,20 @@ void mostrarMenu() {
     cout << "Seleccione una opcion: ";
 }
 
-// Función para guardar usuarios en archivo de texto
+void mostrarMenuInicial() {
+    cout << BLUE << "======================================" << RESET << endl;
+    cout << YELLOW << "       PLATAFORMA DE JUEGOS          " << RESET << endl;
+    cout << BLUE << "======================================" << RESET << endl;
+    
+    // Seccion de Usuario
+    cout << CYAN << "-- USUARIO --" << RESET << endl;
+    cout << GREEN << "1. Registrarse" << RESET << endl;
+    cout << GREEN << "2. Loguearse" << RESET << endl;
+    cout << RED << "3. Salir" << RESET << endl;
+    cout << CYAN << "Seleccione una opcion: " << RESET << endl;
+}
+
+// Funcion para guardar usuarios en archivo de texto
 void guardarUsuariosEnArchivo() {
     ofstream archivo("usuarios.txt");
     if (!archivo) {
@@ -1373,7 +1380,7 @@ void guardarUsuariosEnArchivo() {
     cout << GREEN << "Datos guardados exitosamente." << RESET << endl;
 }
 
-// Función para cargar usuarios desde archivo de texto
+// Funcion para cargar usuarios desde archivo de texto
 void cargarUsuariosDesdeArchivo() {
     ifstream archivo("usuarios.txt");
     if (!archivo) {
@@ -1504,7 +1511,7 @@ void cargarUsuariosDesdeArchivo() {
     cout << GREEN << "Usuarios cargados exitosamente: " << usuarios.size() << " usuarios." << RESET << endl;
 }
 
-// Función para eliminar la cuenta actual
+// Funcion para eliminar la cuenta actual
 void eliminarCuentaActual() {
     system("cls");
 
@@ -1520,7 +1527,7 @@ void eliminarCuentaActual() {
 
     cout << RED << "Estas a punto de eliminar tu cuenta: " << nombre << RESET << endl;
     cout << "Esta accion no se puede deshacer." << endl;
-    cout << "¿Estas seguro de que deseas continuar? (s/n): ";
+    cout << "Estas seguro de que deseas continuar? (s/n): ";
 
     char confirmacion;
     cin >> confirmacion;
@@ -1540,9 +1547,19 @@ void eliminarCuentaActual() {
     system("cls");
 }
 
-// Función para registrar un nuevo usuario
+// Funcion para registrar un nuevo usuario
 void registrarUsuario() {
     system("cls");
+
+    // Verificar si ya hay un usuario logueado
+    if (usuarioActualIndex != -1) {
+        cout << YELLOW << "Ya hay un usuario logueado: " << usuarios[usuarioActualIndex].username << RESET << endl;
+        cout << "Debe cerrar sesion antes de registrar un nuevo usuario." << endl;
+        cout << "Presione cualquier tecla para continuar...";
+        getch();
+        system("cls");
+        return;
+    }
     cout << BLUE << "========================================" << RESET << endl;
     cout << YELLOW << "       REGISTRO DE NUEVO USUARIO       " << RESET << endl;
     cout << BLUE << "========================================" << RESET << endl;
@@ -1574,7 +1591,7 @@ void registrarUsuario() {
     getch();
 }
 
-// Función para ver la lista de usuarios registrados
+// Funcion para ver la lista de usuarios registrados
 void mostrarUsuariosRegistrados() {
     system("cls");
     cout << BLUE << "========================================" << RESET << endl;
@@ -1644,19 +1661,19 @@ void cerrarSesion() {
 /*
     Juego de Cuatro en Raya
 */
-// Definición de constantes
+// Definicion de constantes
 const int FILAS = 6;
 const int COLUMNAS = 7;
 char tablero[FILAS][COLUMNAS];
 
-// Función para inicializar el tablero
+// Funcion para inicializar el tablero
 void inicializarTablero4EnRaya() {
     for (int i = 0; i < FILAS; ++i)
         for (int j = 0; j < COLUMNAS; ++j)
             tablero[i][j] = ' ';
 }
 
-// Función para imprimir el tablero
+// Funcion para imprimir el tablero
 void imprimirTablero4enRaya() {
     system("cls"); // En Windows usa "cls"
     for (int i = 0; i < FILAS; ++i) {
@@ -1678,13 +1695,13 @@ void imprimirTablero4enRaya() {
         if (usuarios[usuarioActualIndex].puntuaciones.count("Juego de Cuatro en Raya")) {
             cout << "Tu record: " << usuarios[usuarioActualIndex].puntuaciones["Juego de Cuatro en Raya"] << " victorias" << endl;
         } else {
-            cout << "Aún no tienes record en este juego" << endl;
+            cout << "Aun no tienes record en este juego" << endl;
         }
     }
     cout << "============================================================="<<endl;
 }
 
-// Función para insertar una ficha en el tablero
+// Funcion para insertar una ficha en el tablero
 bool insertarFicha(int columna, char ficha) {
     if (columna < 0 || columna >= COLUMNAS)
         return false;
@@ -1697,7 +1714,7 @@ bool insertarFicha(int columna, char ficha) {
     return false;
 }
 
-// Función para verificar si hay un ganador
+// Funcion para verificar si hay un ganador
 bool hayGanador(char ficha) {
     // Horizontal
     for (int i = 0; i < FILAS; ++i)
@@ -1737,13 +1754,13 @@ bool tableroLleno() {
     return true;
 }
 
-// Función para la computadora, SOLO elige una columna aleatoria
+// Funcion para la computadora, SOLO elige una columna aleatoria
 int elegirColumnaComputadora() {
     srand(time(0));  // Inicializa la semilla aleatoria
     int columna;
     do {
         columna = rand() % COLUMNAS;  // Elige una columna aleatoria
-        // Verifica si la columna está disponible
+        // Verifica si la columna esta disponible
         bool columnaValida = false;
         for (int i = 0; i < FILAS; ++i) {
             if (tablero[i][columna] == ' ') {
@@ -1756,7 +1773,7 @@ int elegirColumnaComputadora() {
     return columna;  // Solo devuelve la columna, NO inserta la ficha
 }
 
-// Función para jugar Cuatro en Raya
+// Funcion para jugar Cuatro en Raya
 void playCuatroEnRaya() {
     if (usuarioActualIndex == -1) {
         cout << RED << "Debe iniciar sesion primero." << RESET << endl;
@@ -1790,9 +1807,9 @@ void playCuatroEnRaya() {
         if (insertarFicha(columna, jugador)) {
             if (hayGanador(jugador)) {
                 imprimirTablero4enRaya();
-                cout << "¡El jugador " << jugador << " ha ganado!" << endl;
+                cout << "El jugador " << jugador << " ha ganado!" << endl;
                 
-                // Actualizar puntuación solo si el jugador humano gana
+                // Actualizar puntuacion solo si el jugador humano gana
                 if (jugador == 'X') {
                     victorias++;
                     cout << "\nVictorias: " << victorias << endl;
@@ -1805,7 +1822,7 @@ void playCuatroEnRaya() {
                 juegoTerminado = true;
             } else if (tableroLleno()) {
                 imprimirTablero4enRaya();
-                cout << "¡Es un empate!" << endl;
+                cout << "Es un empate!" << endl;
                 juegoTerminado = true;
             }
             jugador = (jugador == 'X') ? 'O' : 'X';  // Cambia de turno
@@ -1818,60 +1835,153 @@ void playCuatroEnRaya() {
     system("cls");
 }
 
+
 /*
-    Juego de Snake
+    Juego de Snake 
 */
+
+#include <windows.h>
+#include <iostream>
+#include <vector>
+using namespace std;
 
 // Dimensiones del tablero
 const int WIDTH = 20;
 const int HEIGHT = 20;
 
-// Posición de la fruta
+// Posicion de la fruta
 int fruitX, fruitY;
 
-// Función para generar una nueva fruta en una posición aleatoria
+// Buffer para el tablero
+char gameBoard[HEIGHT][WIDTH + 1];
+
+// Función para posicionar el cursor en una coordenada específica
+void gotoxy(int x, int y) {
+    COORD coord;
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+// Función para ocultar el cursor
+void hideCursor() {
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+}
+
+// Funcion para generar una nueva fruta en una posicion aleatoria
 void GenerateFruit() {
     fruitX = rand() % (WIDTH - 2) + 1;
     fruitY = rand() % (HEIGHT - 2) + 1;
 }
 
-// Función para dibujar la serpiente y la fruta
-void DrawBoard(const vector<pair<int, int>>& snake, int score) {
-    system("cls");
-
-    // Dibuja el borde superior
-    for (int i = 0; i < WIDTH; i++) cout << "#";
-    cout << endl;
-
-    // Dibuja los lados y el contenido
-    for (int y = 1; y < HEIGHT - 1; y++) {
+// Función para inicializar el tablero base
+void InitializeBoard() {
+    // Inicializar todo el tablero con espacios
+    for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
-            if (x == 0 || x == WIDTH - 1) {
-                cout << "#"; // Paredes
-            } else if (x == fruitX && y == fruitY) {
-                cout << "F"; // Fruta
+            if (y == 0 || y == HEIGHT - 1 || x == 0 || x == WIDTH - 1) {
+                gameBoard[y][x] = '#'; // Bordes
             } else {
-                bool isBody = false;
-                // Dibuja la serpiente
-                for (auto segment : snake) {
-                    if (segment.first == x && segment.second == y) {
-                        // La cabeza es "O" y el cuerpo "o"
-                        cout << (segment == snake[0] ? "O" : "o");
-                        isBody = true;
-                        break;
-                    }
-                }
-                if (!isBody) cout << " "; // Espacio vacío
+                gameBoard[y][x] = ' '; // Espacios vacíos
             }
         }
-        cout << endl;
+        gameBoard[y][WIDTH] = '\0'; // Terminador de cadena
     }
+}
 
-    // Dibuja el borde inferior
-    for (int i = 0; i < WIDTH; i++) cout << "#";
-    cout << endl;
+// Función para actualizar solo las posiciones que cambiaron
+void UpdateBoard(const vector<pair<int, int>>& snake, const vector<pair<int, int>>& prevSnake, int score) {
+    // Limpiar posiciones anteriores de la serpiente (solo si cambió)
+    if (!prevSnake.empty()) {
+        // Limpiar la cola anterior si la serpiente no creció
+        if (prevSnake.size() >= snake.size()) {
+            auto lastTail = prevSnake.back();
+            gameBoard[lastTail.second][lastTail.first] = ' ';
+            gotoxy(lastTail.first, lastTail.second);
+            cout << ' ';
+        }
+    }
+    
+    // Dibujar la nueva serpiente (solo las partes nuevas)
+    for (size_t i = 0; i < snake.size(); i++) {
+        int x = snake[i].first;
+        int y = snake[i].second;
+        
+        // Solo actualizar si la posición cambió
+        bool needUpdate = true;
+        if (!prevSnake.empty() && i < prevSnake.size()) {
+            if (prevSnake[i].first == x && prevSnake[i].second == y) {
+                needUpdate = false;
+            }
+        }
+        
+        if (needUpdate) {
+            char symbol = (i == 0) ? 'O' : 'o'; // Cabeza 'O', cuerpo 'o'
+            gameBoard[y][x] = symbol;
+            gotoxy(x, y);
+            cout << symbol;
+        }
+    }
+    
+    // Dibujar la fruta
+    gameBoard[fruitY][fruitX] = 'F';
+    gotoxy(fruitX, fruitY);
+    cout << 'F';
+    
+    // Actualizar información del jugador (en la parte inferior)
+    gotoxy(0, HEIGHT + 1);
+    cout << "Jugador: " << playerName << " | Puntaje: " << score << "        ";
+    
+    // Mostrar record personal si existe
+    gotoxy(0, HEIGHT + 2);
+    if (usuarioActualIndex != -1) {
+        if (usuarios[usuarioActualIndex].puntuaciones.count("Juego de Snake")) {
+            cout << "Tu record: " << usuarios[usuarioActualIndex].puntuaciones["Juego de Snake"] << " puntos        ";
+        } else {
+            cout << "Aun no tienes record en este juego        ";
+        }
+    }
+}
 
-    // Muestra la información del jugador
+// Funcion para dibujar el tablero completo (solo la primera vez)
+void DrawBoard(const vector<pair<int, int>>& snake, int score) {
+    system("cls");
+    hideCursor();
+    
+    // Dibujar el tablero completo
+    for (int y = 0; y < HEIGHT; y++) {
+        // Inicializar la fila
+        for (int x = 0; x < WIDTH; x++) {
+            if (y == 0 || y == HEIGHT - 1 || x == 0 || x == WIDTH - 1) {
+                gameBoard[y][x] = '#'; // Bordes
+            } else {
+                gameBoard[y][x] = ' '; // Espacios vacíos
+            }
+        }
+        gameBoard[y][WIDTH] = '\0';
+    }
+    
+    // Colocar la serpiente
+    for (size_t i = 0; i < snake.size(); i++) {
+        int x = snake[i].first;
+        int y = snake[i].second;
+        gameBoard[y][x] = (i == 0) ? 'O' : 'o';
+    }
+    
+    // Colocar la fruta
+    gameBoard[fruitY][fruitX] = 'F';
+    
+    // Dibujar todo el tablero
+    for (int y = 0; y < HEIGHT; y++) {
+        gotoxy(0, y);
+        cout << gameBoard[y];
+    }
+    
+    // Mostrar información del jugador
+    gotoxy(0, HEIGHT + 1);
     cout << "Jugador: " << playerName << " | Puntaje: " << score << endl;
     
     // Mostrar record personal si existe
@@ -1879,12 +1989,12 @@ void DrawBoard(const vector<pair<int, int>>& snake, int score) {
         if (usuarios[usuarioActualIndex].puntuaciones.count("Juego de Snake")) {
             cout << "Tu record: " << usuarios[usuarioActualIndex].puntuaciones["Juego de Snake"] << " puntos" << endl;
         } else {
-            cout << "Aún no tienes record en este juego" << endl;
+            cout << "Aun no tienes record en este juego" << endl;
         }
     }
 }
 
-// Función para mostrar el menú principal
+// Funcion para mostrar el menu principal
 void ShowMenuSnake() {
     cout << "\n\n";
     cout << "======================================\n";
@@ -1898,7 +2008,7 @@ void ShowMenuSnake() {
         playerName = usuarios[usuarioActualIndex].username;
         cout << "Jugador: " << playerName << "\n\n";
     } else {
-        cout << "Por favor, inicia sesión primero" << endl;
+        cout << "Por favor, inicia sesion primero" << endl;
         cout << "Presiona cualquier tecla para volver...";
         getch();
         return;
@@ -1915,50 +2025,64 @@ void ShowMenuSnake() {
     if (usuarios[usuarioActualIndex].puntuaciones.count("Juego de Snake")) {
         cout << "Tu record actual: " << usuarios[usuarioActualIndex].puntuaciones["Juego de Snake"] << " puntos" << endl;
     } else {
-        cout << "Aún no tienes record en este juego" << endl;
+        cout << "Aun no tienes record en este juego" << endl;
     }
     
     cout << "\nPresiona cualquier tecla para comenzar...";
     getch();
 }
 
-// Función principal del juego
+// Funcion principal del juego
 void game() {
     const int DELAY = 150;
-    int dx = 0, dy = 0;  // Dirección inicial: detenida
+    int dx = 0, dy = 0;  // Direccion inicial: detenida
     int score = 0;
     bool paused = false;
+    bool firstDraw = true;
 
     // Inicializa la serpiente en el centro del tablero
     vector<pair<int, int>> snake = {{WIDTH / 2, HEIGHT / 2}};
+    vector<pair<int, int>> prevSnake; // Para almacenar la posición anterior
     GenerateFruit();  // Genera la primera fruta
 
     bool gameRunning = true;
 
     while (gameRunning) {
-        // Si el juego está pausado, solo revisamos si el usuario quiere despausar
+        // Si el juego esta pausado, solo revisamos si el usuario quiere despausar
         if (paused) {
             if (_kbhit()) {
                 char key = _getch();
                 if (key == 'p') {
                     paused = false;
-                    DrawBoard(snake, score); // Redibuja el tablero al despausar
+                    firstDraw = true; // Redibujar completamente al despausar
                 } else if (key == 'q') {
                     gameRunning = false;
                 }
             }
-            Sleep(100); // Reducir el uso de CPU mientras está pausado
-            continue;   // Salta el resto del ciclo mientras está pausado
+            Sleep(100); // Reducir el uso de CPU mientras esta pausado
+            continue;   // Salta el resto del ciclo mientras esta pausado
         }
 
         // Entrada de teclado
         if (_kbhit()) {
             char key = _getch();
             switch (key) {
-                case 'w': dy = -1; dx = 0; break;
-                case 's': dy = 1; dx = 0; break;
-                case 'a': dx = -1; dy = 0; break;
-                case 'd': dx = 1; dy = 0; break;
+                case 'w': 
+                    // No permitir ir hacia abajo si ya va hacia arriba
+                    if (dy != 1) { dy = -1; dx = 0; }
+                    break;
+                case 's': 
+                    // No permitir ir hacia arriba si ya va hacia abajo
+                    if (dy != -1) { dy = 1; dx = 0; }
+                    break;
+                case 'a': 
+                    // No permitir ir hacia la derecha si ya va hacia la izquierda
+                    if (dx != 1) { dx = -1; dy = 0; }
+                    break;
+                case 'd': 
+                    // No permitir ir hacia la izquierda si ya va hacia la derecha
+                    if (dx != -1) { dx = 1; dy = 0; }
+                    break;
                 case 'q': gameRunning = false; break;
                 case 'p':  // Pausar el juego
                     paused = true;
@@ -1968,16 +2092,16 @@ void game() {
             }
         }
 
-        // Calcula la nueva posición de la cabeza
+        // Calcula la nueva posicion de la cabeza
         int newHeadX = snake[0].first + dx;
         int newHeadY = snake[0].second + dy;
 
-        // Verifica colisión los bordes
+        // Verifica colision los bordes
         if (newHeadX <= 0 || newHeadX >= WIDTH - 1 || newHeadY <= 0 || newHeadY >= HEIGHT - 1) {
             break; // Fin del juego
         }
 
-        // Verifica colisión consigo misma
+        // Verifica colision consigo misma
         if (dx != 0 || dy != 0) {
             for (size_t i = 1; i < snake.size(); i++) {
                 if (snake[i].first == newHeadX && snake[i].second == newHeadY) {
@@ -1987,29 +2111,36 @@ void game() {
             }
         }
 
-        // Verifica si comió la fruta
+        // Guardar estado anterior de la serpiente
+        prevSnake = snake;
+
+        // Verifica si comio la fruta
         bool grow = false;
         if (newHeadX == fruitX && newHeadY == fruitY) {
             score += 10;
-
             GenerateFruit();  // Nueva fruta
             grow = true;
         }
 
         // Mueve la serpiente
-        snake.insert(snake.begin(), {newHeadX, newHeadY}); // Añade la nueva cabeza
+        snake.insert(snake.begin(), {newHeadX, newHeadY}); // Anade la nueva cabeza
         if (!grow) {
-            snake.pop_back();  // Si no comió, elimina la cola
+            snake.pop_back();  // Si no comio, elimina la cola
         }
 
-        // Dibuja el tablero actualizado
-        DrawBoard(snake, score);
+        // Dibuja el tablero
+        if (firstDraw) {
+            DrawBoard(snake, score); // Dibujo completo la primera vez
+            firstDraw = false;
+        } else {
+            UpdateBoard(snake, prevSnake, score); // Solo actualizar cambios
+        }
 
         // Control de velocidad del juego
         Sleep(DELAY);
     }
 
-    cout << "\n¡Juego terminado! Puntaje final: " << score << endl;
+    cout << "\nJuego terminado! Puntaje final: " << score << endl;
     
     // Actualizar record en el usuario
     if (usuarioActualIndex != -1) {
@@ -2035,7 +2166,6 @@ void playSnake() {
     getch();
     system("cls");
 }
-
 /*
     Juego de Sudoku
 */
@@ -2121,7 +2251,7 @@ void playSudoku() {
     if (usuarios[usuarioActualIndex].puntuaciones.count("Juego de Sudoku")) {
         cout << "Tu record: " << usuarios[usuarioActualIndex].puntuaciones["Juego de Sudoku"] << " sudokus completados" << endl;
     } else {
-        cout << "Aún no tienes record en este juego" << endl;
+        cout << "Aun no tienes record en este juego" << endl;
     }
 
     while (!estaCompleto(tablero)) {
@@ -2152,7 +2282,7 @@ void playSudoku() {
         }
     }
 
-    cout << GREEN << "¡FELICIDADES COMPLETASTE EL SUDOKU!" << RESET << endl;
+    cout << GREEN << "FELICIDADES COMPLETASTE EL SUDOKU!" << RESET << endl;
     
     // Obtener record actual si existe
     int sudokusCompletados = 1;
@@ -2198,7 +2328,7 @@ void ShowMenuMinas() {
         playerName = usuarios[usuarioActualIndex].username;
         cout << "Jugador: " << playerName << "\n\n";
     } else {
-        cout << "Por favor, inicia sesión primero" << endl;
+        cout << "Por favor, inicia sesion primero" << endl;
         cout << "Presiona cualquier tecla para volver...";
         getch();
         return;
@@ -2206,7 +2336,7 @@ void ShowMenuMinas() {
     
     cout << "Hola " << playerName << "! Estas son las reglas del juego:\n\n";
     cout << "1. Revela las casillas digitando la fila y columna correspondiente.\n";
-    cout << "2. Si la casilla revela un número, indica las bombas próximas\n";
+    cout << "2. Si la casilla revela un numero, indica las bombas proximas\n";
     cout << "3. Cada casilla revelada suma 10 puntos\n";
     cout << "4. Hay 5 bombas en total\n";
     cout << "5. El juego termina cuando descubres una casilla que contiene una bomba\n";
@@ -2215,7 +2345,7 @@ void ShowMenuMinas() {
     if (usuarios[usuarioActualIndex].puntuaciones.count("Juego de Buscaminas")) {
         cout << "\nTu record actual: " << usuarios[usuarioActualIndex].puntuaciones["Juego de Buscaminas"] << " puntos" << endl;
     } else {
-        cout << "\nAún no tienes record en este juego" << endl;
+        cout << "\nAun no tienes record en este juego" << endl;
     }
     
     cout << "\nPresiona cualquier tecla para comenzar...";
@@ -2279,7 +2409,7 @@ bool revelar(int f, int c) {
     descubierto[f][c] = true;
 
     if (minas[f][c]) {
-        return false; // ¡Perdiste!
+        return false; // Perdiste!
     }
 
     int minasCerca = contarMinasVecinas(f, c);
@@ -2316,7 +2446,7 @@ void gameminas() {
 
     while (jugando) {
         mostrarTablerominas();
-        cout << "Jugador: " << playerName << " | Puntuación: " << puntuacion << endl;
+        cout << "Jugador: " << playerName << " | Puntuacion: " << puntuacion << endl;
         
         // Mostrar record personal si existe
         if (usuarios[usuarioActualIndex].puntuaciones.count("Juego de Buscaminas")) {
@@ -2332,13 +2462,13 @@ void gameminas() {
         // Solo incrementar si la casilla no estaba descubierta
         if (!descubierto[f][c]) {
             if (!revelar(f, c)) {
-                cout << "?? ¡PISASTE UNA MINA! ¡GAME OVER!\n";
+                cout << "?? PISASTE UNA MINA! GAME OVER!\n";
                 jugando = false;
             } else {
                 puntuacion += 10;
-                cout << "? Casilla segura. Puntuación actual: " << puntuacion << " puntos.\n";
+                cout << "? Casilla segura. Puntuacion actual: " << puntuacion << " puntos.\n";
                 if (juegoGanado()) {
-                    cout << "?? ¡FELICIDADES! GANASTE EL JUEGO\n";
+                    cout << "?? FELICIDADES! GANASTE EL JUEGO\n";
                     jugando = false;
                 }
             }
@@ -2347,8 +2477,8 @@ void gameminas() {
         }
     }
 
-    // Mostrar puntuación final
-    cout << "\n?? Puntuación final: " << puntuacion << " puntos.\n";
+    // Mostrar puntuacion final
+    cout << "\n?? Puntuacion final: " << puntuacion << " puntos.\n";
     
     // Actualizar record en el usuario
     if (usuarioActualIndex != -1) {
@@ -2383,7 +2513,7 @@ void playminas() {
     system("cls");
 }
 
-// Función para la tienda de juegos
+// Funcion para la tienda de juegos
 void PageStore() {
     if (usuarioActualIndex == -1) {
         system("cls");
@@ -2569,94 +2699,72 @@ void PageStore() {
         }
     }
 }
-// Función para mostrar la biblioteca de juegos y permitir jugar
+// Funcion para mostrar la biblioteca de juegos y permitir jugar
 void PageLibrary() {
     if (usuarioActualIndex == -1) {
         system("cls");
-        cout << RED << "Primero debe iniciar sesion para acceder a la biblioteca." << RESET << endl;
+        cout << RED << "Primero debe iniciar sesion para acceder a su biblioteca." << RESET << endl;
         cout << "Presione cualquier tecla para continuar...";
         getch();
         return;
     }
 
+    system("cls");
     int opcion;
     bool salirBiblioteca = false;
 
     while (!salirBiblioteca) {
         system("cls");
-        cout << BLUE << "========================================" << RESET << endl;
-        cout << YELLOW << "       BIBLIOTECA DE JUEGOS            " << RESET << endl;
-        cout << BLUE << "========================================" << RESET << endl;
+        cout << BLUE << "Biblioteca de Juegos de " << usuarios[usuarioActualIndex].username << RESET << endl;
+        cout << BLUE << "====================" << RESET << endl;
 
-        Usuario& user = usuarios[usuarioActualIndex];
-
-        if (user.games.empty()) {
+        if (usuarios[usuarioActualIndex].games.empty()) {
             cout << YELLOW << "No tienes juegos en tu biblioteca." << RESET << endl;
-            cout << "Visita la tienda para comprar juegos!" << endl;
+            cout << "Ve a la tienda para comprar juegos." << endl;
             cout << "\nPresione cualquier tecla para volver al menu principal...";
             getch();
-            return;
-        }
-
-        cout << "Juegos disponibles:" << endl;
-        cout << "----------------------------------------" << endl;
-
-        int i = 1;
-        for (const auto& game : user.games) {
-            cout << i << ". " << game;
-            if (user.puntuaciones.count(game)) {
-                cout << " (Record: " << user.puntuaciones.at(game) << ")";
-            }
-            cout << endl;
-            i++;
-        }
-
-        cout << "----------------------------------------" << endl;
-        cout << i << ". Volver al menu principal" << endl;
-        cout << "\nSeleccione un juego para jugar: ";
-        cin >> opcion;
-
-        if (opcion > 0 && opcion < i) {
-            auto it = user.games.begin();
-            advance(it, opcion - 1);
-            string juegoSeleccionado = *it;
-
-            system("cls");
-            cout << BLUE << "========================================" << RESET << endl;
-            cout << YELLOW << "       " << juegoSeleccionado << "       " << RESET << endl;
-            cout << BLUE << "========================================" << RESET << endl;
-
-            cout << GREEN << "Simulando partida de " << juegoSeleccionado << "..." << RESET << endl;
-            cout << "Cargando..." << endl;
-
-            // Simular carga
-            for (int i = 0; i < 10; i++) {
-                cout << ".";
-                cout.flush();
-                Sleep(200);
-            }
-            cout << endl;
-
-            // Simular juego y generar puntuacion aleatoria
-            int puntuacion = rand() % 1000 + 1;
-            cout << YELLOW << "Partida finalizada!" << RESET << endl;
-            cout << "Puntuacion obtenida: " << puntuacion << endl;
-
-            // Actualizar record si es necesario
-            actualizarRecord(user, juegoSeleccionado, puntuacion);
-            guardarUsuariosEnArchivo();
-
-            cout << "\nPresione cualquier tecla para continuar...";
-            getch();
-        } else if (opcion == i) {
             salirBiblioteca = true;
         } else {
-            cout << RED << "Opcion invalida. Intente nuevamente." << RESET << endl;
-            cout << "Presione cualquier tecla para continuar...";
-            getch();
+            cout << "Tus juegos:" << endl;
+            int contador = 1;
+            for (const auto &game : usuarios[usuarioActualIndex].games) {
+                cout << contador << ". " << game << endl;
+                contador++;
+            }
+            cout << contador << ". Volver al menu principal" << endl;
+
+            cout << "\nSelecciona un juego para jugar o " << contador << " para volver: ";
+            cin >> opcion;
+
+            if (opcion == contador) {
+                salirBiblioteca = true;
+            } else if (opcion > 0 && opcion < contador) {
+                auto it = usuarios[usuarioActualIndex].games.begin();
+                advance(it, opcion - 1);
+                string juegoSeleccionado = *it;
+
+                if (juegoSeleccionado == "Juego de Snake") {
+                    playSnake();
+                } else if (juegoSeleccionado == "Juego de Sudoku") {
+                    playSudoku();
+                }
+                else if (juegoSeleccionado == "Juego de Cuatro en Raya") {
+                    playCuatroEnRaya();
+                }
+                else if(juegoSeleccionado=="Juego de Buscaminas") {
+                  playminas();
+                }
+                else {cout << RED << "Juego no reconocido." << RESET << endl;
+                }
+            } else {
+                cout << RED << "Opcion no valida. Intente nuevamente." << RESET << endl;
+                cout << "Presione cualquier tecla para continuar...";
+                getch();
+            }
         }
     }
 }
+
 int main() {
     srand(time(0));
     SetConsoleOutputCP(CP_UTF8);
@@ -2667,62 +2775,85 @@ int main() {
     int opcion;
     bool salir = false;
     
-    while (!salir) {
+    do {
         system("cls");
-        mostrarMenu();
-        cin >> opcion;
-        
+        mostrarMenuInicial();
+        cin >> opcion;        
         switch (opcion) {
             case 1:
                 registrarUsuario();
                 break;
             case 2:
                 iniciarSesion();
-                break;
-            case 3:
-                cerrarSesion();
-                break;
-            case 4:
-                PageStore();
-                break;
-            case 5:
-                PageLibrary();
-                break;
-            case 6:
                 if (usuarioActualIndex != -1) {
-                    mostrarEstadisticasJugador(usuarios[usuarioActualIndex]);
-                } else {
-                    cout << RED << "Debe iniciar sesion primero." << RESET << endl;
-                    cout << "Presione cualquier tecla para continuar...";
-                    getch();
+                    cout << GREEN << "Bienvenido, " << usuarios[usuarioActualIndex].username << "!" << RESET << endl;
+                    int opcionUsuario;
+                    bool volverMenuInicial = false;
+                    do {
+                        system("cls");
+                        mostrarMenu();
+                        cin >> opcionUsuario;
+                        switch (opcionUsuario) {
+                            case 1:
+                                PageStore();
+                                break;
+                            case 2:
+                                PageLibrary();
+                                break;
+                            case 3:
+                                if (usuarioActualIndex != -1) {
+                                    mostrarEstadisticasJugador(usuarios[usuarioActualIndex]);
+                                } else {
+                                    cout << RED << "Debe iniciar sesion primero." << RESET << endl;
+                                    cout << "Presione cualquier tecla para continuar...";
+                                    getch();
+                                }
+                                break;
+                            case 4:
+                                mostrarRankingGlobal();
+                                break;
+                            case 5:
+                                personalizarPerfil();
+                                break;
+                            case 6:
+                                gestionarAmigos();
+                                break;
+                            case 7:
+                                mostrarUsuariosRegistrados();
+                                break;
+                            case 8:
+                                limpiarArchivoCorrupto();
+                                break;
+                            case 9:
+                                cerrarSesion();
+                                getch();
+                                volverMenuInicial = true;
+                                break;
+                            default:
+                                cout << RED << "Opcion invalida. Intente nuevamente." << RESET << endl;
+                                cout << "Presione cualquier tecla para continuar...";
+                                getch();
+                                break;
+                        }
+                    } while (!volverMenuInicial); 
                 }
                 break;
-            case 7:
-                mostrarRankingGlobal();
-                break;
-            case 8:
-                personalizarPerfil();
-                break;
-            case 9:
-                gestionarAmigos();
-                break;
-            case 10:
-                mostrarUsuariosRegistrados();
-                break;
-            case 11:
-                limpiarArchivoCorrupto();
-                break;
-            case 12:
-                cout << GREEN << "Gracias por usar la plataforma de juegos!" << RESET << endl;
+            case 3: {
+                system("cls");
+                cout << RED << "Saliendo de la plataforma..." << RESET << endl;
+                cout << "Gracias por usar la plataforma de juegos!" << endl;
+                cout << "Presione cualquier tecla para continuar...";
+                getch();
                 salir = true;
                 break;
+            }
             default:
                 cout << RED << "Opcion invalida. Intente nuevamente." << RESET << endl;
                 cout << "Presione cualquier tecla para continuar...";
                 getch();
                 break;
-        }
-    }
-    
+        } 
+    } while (!salir);
+
     return 0;
 }
