@@ -610,7 +610,7 @@ void personalizarPerfil() {
                     cout << YELLOW << "No tienes juegos en tu biblioteca." << RESET << endl;
                 } else {
                     for (const auto& game : user.games) {
-                        cout << "� " << game;
+                        cout << "? " << game;
                         if (user.puntuaciones.count(game)) {
                             cout << " (Record: " << user.puntuaciones.at(game) << ")";
                         }
@@ -623,7 +623,7 @@ void personalizarPerfil() {
                     cout << YELLOW << "No tienes amigos en tu lista." << RESET << endl;
                 } else {
                     for (const auto& amigo : user.amigos) {
-                        cout << "� " << amigo << endl;
+                        cout << "? " << amigo << endl;
                     }
                 }
                 break;
@@ -999,7 +999,7 @@ void gestionarAmigos() {
                                     cout << YELLOW << "No tiene records registrados." << RESET << endl;
                                 } else {
                                     for (const auto& record : u.puntuaciones) {
-                                        cout << "� " << record.first << ": " << record.second << " puntos" << endl;
+                                        cout << "? " << record.first << ": " << record.second << " puntos" << endl;
                                     }
                                 }
                                 break;
@@ -1200,7 +1200,7 @@ void mostrarRankingGlobal() {
     cout << YELLOW << "       RECORDS POR JUEGO               " << RESET << endl;
     cout << CYAN << "========================================" << RESET << endl;
     
-    vector<string> juegos = {"Juego de Snake", "Juego de Sudoku", "Juego de Cuatro en Raya", "Juego de Buscaminas"};
+    vector<string> juegos = {"Juego de Snake", "Juego de Sudoku", "Juego de Cuatro en Raya", "Juego de Buscaminas", "Juego del Ahorcado"};
     
     for (const string& juego : juegos) {
         cout << "\n" << MAGENTA << "- " << juego << ":" << RESET << endl;
@@ -1831,6 +1831,251 @@ void playCuatroEnRaya() {
         }
     }
     cout << "Presione cualquier tecla para continuar...";
+    getch();
+    system("cls");
+}
+
+/*
+    Juego del Ahorcado
+*/
+
+// Categorías y palabras para el ahorcado
+map<string, vector<string>> palabrasPorCategoria = {
+    {"Animales", {"ELEFANTE", "JIRAFA", "TIGRE", "LEON", "CANGURO", "DELFIN", 
+	"TORTUGA", "COCODRILO", "OSO", "KOALA", "ARMADILLO", "NUTRIA", "WOMBAT", 
+	"CAPIBARA", "TAPIR", "MARMOTA", "ERIZO", "MURCIELAGO", "ALCE", "PERRO", 
+	"BALLENA", "VENADO", "ORANGUTAN", "GORILA", "CHIMPANCE", "HUMANO", "RINOCERONTE", 
+	"MANDRIL", "ZARIGUELLA", "ZURICATA", "GATO", "OTORONGO", "GUEPARDO", "MARMOTA", "CASTOR", 
+	"PUMA", "COLIBRI", "PINGÜINO", "AVESTRUZ", "CACATUA", "GUACAMAYO",
+    "KIWI", "PELICANO", "FLAMENCO", "AGUILA", "BUHO",
+    "IGUANA", "CAMALEON", "SERPIENTE", "SAPO", "SALAMANDRA",
+    "MANATI", "NARVAL", "ORCA", "FOCA", "PULPO", "PEZLUNA", 
+	"PEZGATO", "PEZGLOBO", "MERLUZA", "ESTRELLAMAR",
+    "CABALLITOMAR", "MEDUSA", "ANGUILLA", "PEZESPADA", "PEZPIEDRA",
+    "MANTISRELIGIOSA", "ESCORPION", "CIEMPIES", "MARIQUITA", "LIBELULA",
+    "SALTAMONTES", "LUCIERNAGA", "HORMIGALEON", "ARAÑACAMELLO", "MILPIES"}},
+    {"Paises", {
+    "ARGENTINA", "BRASIL", "CANADA", "ESPAÑA", "JAPON", "ITALIA", "ALEMANIA", "AUSTRALIA",
+    "PERU", "CHILE", "COLOMBIA", "MEXICO", "VENEZUELA", "ECUADOR", "URUGUAY", "PARAGUAY",
+    "BOLIVIA", "PANAMA", "CUBA", "NICARAGUA", "GUATEMALA", "HONDURAS", "EL SALVADOR",
+    "ESTADOS UNIDOS", "REINO UNIDO", "PORTUGAL", "FRANCIA", "SUIZA", "BELGICA", "PAISES BAJOS",
+    "NORUEGA", "SUECIA", "DINAMARCA", "FINLANDIA", "RUSIA", "CHINA", "COREA DEL SUR", "INDIA",
+    "PAKISTAN", "IRAN", "ISRAEL", "ARABIA SAUDITA", "SUDAFRICA", "NIGERIA", "EGIPTO", "KENIA",
+    "MARRUECOS", "TUNEZ", "TURQUIA", "GRECIA", "POLONIA", "UCRANIA", "CHEQUIA", "HUNGRIA",
+    "SERBIA", "CROACIA", "VIETNAM", "TAILANDIA", "MALASIA", "FILIPINAS", "INDONESIA",
+    "NUEVA ZELANDA"}},
+    {"Frutas", {
+    "MANZANA", "BANANA", "NARANJA", "FRESA", "SANDIA", "MELON", "KIWI", "PINA",
+    "PERA", "CIRUELA", "MANGO", "PAPAYA", "GUAYABA", "GRANADA", "LIMA", "LIMON",
+    "MARACUYA", "COCO", "HIGO", "TAMARINDO", "FRAMBUESA", "MORA", "ARANDANO",
+    "MANDARINA", "CARAMBOLA", "CHIRIMOYA", "DURAZNO", "NECTARINA", "PALTA", "PITAJAYA"
+	}},
+    {"Deportes", {
+    "FUTBOL", "BALONCESTO", "TENIS", "NATACION", "CICLISMO", "VOLEIBOL", "BEISBOL", "ATLETISMO",
+    "GIMNASIA", "GOLF", "RUGBY", "BOXEO", "ESGRIMA", "JUDO", "TAEKWONDO", "KARATE",
+    "SKATEBOARDING", "SURF", "ESCALADA", "HOCKEY", "PATINAJE", "REMO", "BILLAR",
+    "PESAS", "LUCHA", "BADMINTON", "PINGPONG", "TIROCONARCO", "ESQUI", "TRIATLON", "HALTEROFILIA"
+}},
+    {"Profesiones", {
+    "MEDICO", "INGENIERO", "PROFESOR", "ARQUITECTO", "PROGRAMADOR", "BOMBERO", "POLICIA", "CHEF",
+    "ABOGADO", "ENFERMERO", "ELECTRICISTA", "CARPINTERO", "MECANICO", "FOTOGRAFO", "PANADERO",
+    "FARMACEUTICO", "PINTOR", "DISEÑADOR", "CONTADOR", "VETERINARIO", "ACTOR", "MUSICO",
+    "CAMARERO", "PILOTO", "ESCRITOR", "BARBERO", "REPORTERO", "PSICOLOGO", "GUARDAESPALDAS"
+}},
+};
+
+void mostrarMenuAhorcado() {
+    cout << "\n\n";
+    cout << "======================================\n";
+    cout << "           JUEGO DEL AHORCADO         \n";
+    cout << "======================================\n\n";
+
+    cout << "Bienvenido al juego del Ahorcado!\n\n";
+
+    // Si hay un usuario logueado, usamos su nombre
+    if (usuarioActualIndex != -1) {
+        playerName = usuarios[usuarioActualIndex].username;
+        cout << "Jugador: " << playerName << "\n\n";
+    } else {
+        cout << "Por favor, inicia sesion primero" << endl;
+        cout << "Presiona cualquier tecla para volver...";
+        getch();
+        return;
+    }
+
+    cout << "Hola " << playerName << "! Estas son las reglas del juego:\n\n";
+    cout << "1. Se te presentará una palabra oculta de una categoría específica.\n";
+    cout << "2. Debes adivinar las letras que componen la palabra.\n";
+    cout << "3. Tienes 6 intentos para adivinar la palabra.\n";
+    cout << "4. Cada letra correcta revelará su posición en la palabra.\n";
+    cout << "5. Cada letra incorrecta reducirá tus intentos restantes.\n";
+    cout << "6. Si adivinas la palabra antes de quedarte sin intentos, ganas.\n";
+    cout << "7. Cada palabra adivinada suma 100 puntos.\n";
+    
+    // Mostrar record personal si existe
+    if (usuarioActualIndex != -1 && usuarios[usuarioActualIndex].puntuaciones.count("Juego del Ahorcado")) {
+        cout << "\nTu record actual: " << usuarios[usuarioActualIndex].puntuaciones["Juego del Ahorcado"] << " puntos" << endl;
+    } else {
+        cout << "\nAun no tienes record en este juego" << endl;
+    }
+    
+    cout << "\nPresiona cualquier tecla para comenzar...";
+    getch();
+}
+
+void dibujarAhorcado(int intentosRestantes) {
+    cout << endl;
+    cout << "Intentos restantes: " << intentosRestantes << endl;
+    cout << "  _______" << endl;
+    cout << "  |     |" << endl;
+    cout << "  |     " << (intentosRestantes < 6 ? "O" : " ") << endl;
+    cout << "  |    " << (intentosRestantes < 4 ? "/" : " ") 
+                      << (intentosRestantes < 5 ? "|" : " ") 
+                      << (intentosRestantes < 3 ? "\\" : " ") << endl;
+    cout << "  |    " << (intentosRestantes < 2 ? "/" : " ") 
+                      << " " 
+                      << (intentosRestantes < 1 ? "\\" : " ") << endl;
+    cout << " _|_" << endl;
+    cout << endl;
+}
+
+void playAhorcado() {
+    if (usuarioActualIndex == -1) {
+        cout << RED << "Debe iniciar sesion primero." << RESET << endl;
+        getch();
+        return;
+    }
+    
+    system("cls");
+    mostrarMenuAhorcado();
+    
+    bool jugarOtraVez = true;
+    int puntuacionTotal = 0;
+    
+    if (usuarioActualIndex != -1 && usuarios[usuarioActualIndex].puntuaciones.count("Juego del Ahorcado")) {
+        puntuacionTotal = usuarios[usuarioActualIndex].puntuaciones["Juego del Ahorcado"];
+    }
+    
+    while (jugarOtraVez) {
+        system("cls");
+        
+        // Seleccionar categoría
+        cout << "Selecciona una categoría:\n";
+        int i = 1;
+        for (const auto& categoria : palabrasPorCategoria) {
+            cout << i << ". " << categoria.first << endl;
+            i++;
+        }
+        
+        int opcionCategoria;
+        cout << "\nIngresa el número de la categoría: ";
+        cin >> opcionCategoria;
+        
+        if (opcionCategoria < 1 || opcionCategoria > palabrasPorCategoria.size()) {
+            cout << RED << "Opción inválida. Seleccionando categoría aleatoria..." << RESET << endl;
+            opcionCategoria = rand() % palabrasPorCategoria.size() + 1;
+            Sleep(2000);
+        }
+        
+        auto it = palabrasPorCategoria.begin();
+        advance(it, opcionCategoria - 1);
+        string categoriaSeleccionada = it->first;
+        vector<string> palabras = it->second;
+        
+        // Seleccionar palabra aleatoria
+        srand(time(0));
+        string palabra = palabras[rand() % palabras.size()];
+        string palabraAdivinada(palabra.length(), '_');
+        
+        int intentosRestantes = 6;
+        vector<char> letrasIntentadas;
+        bool palabraAdivinadaCompleta = false;
+        
+        while (intentosRestantes > 0 && !palabraAdivinadaCompleta) {
+            system("cls");
+            cout << "Categoría: " << categoriaSeleccionada << endl;
+            dibujarAhorcado(intentosRestantes);
+            
+            cout << "Palabra: ";
+            for (char c : palabraAdivinada) {
+                cout << c << " ";
+            }
+            cout << endl << endl;
+            
+            cout << "Letras intentadas: ";
+            for (char c : letrasIntentadas) {
+                cout << c << " ";
+            }
+            cout << endl << endl;
+            
+            cout << "Ingresa una letra: ";
+            char letra;
+            cin >> letra;
+            letra = toupper(letra);
+            
+            // Verificar si la letra ya fue intentada
+            if (find(letrasIntentadas.begin(), letrasIntentadas.end(), letra) != letrasIntentadas.end()) {
+                cout << YELLOW << "Ya intentaste esa letra. Intenta con otra." << RESET << endl;
+                Sleep(1000);
+                continue;
+            }
+            
+            letrasIntentadas.push_back(letra);
+            
+            // Verificar si la letra está en la palabra
+            bool letraAdivinada = false;
+            for (int i = 0; i < palabra.length(); i++) {
+                if (palabra[i] == letra) {
+                    palabraAdivinada[i] = letra;
+                    letraAdivinada = true;
+                }
+            }
+            
+            if (!letraAdivinada) {
+                intentosRestantes--;
+                cout << RED << "La letra " << letra << " no está en la palabra." << RESET << endl;
+            } else {
+                cout << GREEN << "¡Correcto! La letra " << letra << " está en la palabra." << RESET << endl;
+            }
+            
+            // Verificar si se adivinó toda la palabra
+            if (palabraAdivinada == palabra) {
+                palabraAdivinadaCompleta = true;
+            }
+            
+            Sleep(1000);
+        }
+        
+        system("cls");
+        if (palabraAdivinadaCompleta) {
+            puntuacionTotal += 100;
+            cout << GREEN << "¡Felicidades! Adivinaste la palabra: " << palabra << RESET << endl;
+            cout << GREEN << "Ganaste 100 puntos. Puntuación total: " << puntuacionTotal << RESET << endl;
+        } else {
+            cout << RED << "¡Oh no! Te quedaste sin intentos." << RESET << endl;
+            cout << "La palabra era: " << palabra << endl;
+        }
+        
+        dibujarAhorcado(intentosRestantes);
+        
+        // Preguntar si quiere jugar otra vez
+        cout << "\n¿Quieres jugar otra vez? (s/n): ";
+        char respuesta;
+        cin >> respuesta;
+        
+        if (tolower(respuesta) != 's') {
+            jugarOtraVez = false;
+        }
+    }
+    
+    // Actualizar record en el usuario
+    if (usuarioActualIndex != -1) {
+        actualizarRecord(usuarios[usuarioActualIndex], "Juego del Ahorcado", puntuacionTotal);
+        guardarUsuariosEnArchivo();
+    }
+    
+    cout << "\nPuntuación final: " << puntuacionTotal << " puntos." << endl;
+    cout << "Presiona cualquier tecla para volver al menú...";
     getch();
     system("cls");
 }
@@ -2532,7 +2777,8 @@ void PageStore() {
         {"Juego de Snake", 20.0},
         {"Juego de Sudoku", 20.0},
         {"Juego de Cuatro en Raya", 20.0},
-        {"Juego de Buscaminas", 20.0}
+        {"Juego de Buscaminas", 20.0},
+        {"Juego del Ahorcado", 20.0}
     };
 
     while (salirTienda == true) {
@@ -2548,11 +2794,12 @@ void PageStore() {
         cout << "2. Juego de Sudoku - $20.00" << endl;
         cout << "3. Juego de Cuatro en Raya - $20.00" << endl;
         cout << "4. Juego de Buscaminas - $20.00" << endl;
+        cout << "5. Juego del Ahorcado - $20.00" << endl;
         cout << "----------------------------------------" << endl;
-        cout << "5. Ver el carrito" << endl;
-        cout << "6. Proceder al pago" << endl;
-        cout << "7. Ver historial de compras" << endl;
-        cout << "8. Volver al menu principal" << endl;
+        cout << "6. Ver el carrito" << endl;
+        cout << "7. Proceder al pago" << endl;
+        cout << "8. Ver historial de compras" << endl;
+        cout << "9. Volver al menu principal" << endl;
         cout << endl;
         
         // Mostrar informacion del usuario
@@ -2583,6 +2830,10 @@ void PageStore() {
                 carrito.push_back("Juego de Buscaminas");
                 break;
             case 5:
+            	cout << GREEN << "Juego de Ahorcado agregado al carrito." << RESET << endl;
+                carrito.push_back("Juego del Ahorcado");
+                break;
+            case 6:
                 system("cls");
                 cout << YELLOW << "========================================" << RESET << endl;
                 cout << YELLOW << "           CARRITO DE COMPRAS           " << RESET << endl;
@@ -2605,7 +2856,7 @@ void PageStore() {
                     cout << YELLOW << "Total: $" << fixed << setprecision(2) << total << RESET << endl;
                 }
                 break;
-            case 6:
+            case 7:
                 if (carrito.empty()) {
                     cout << RED << "El carrito esta vacio. No hay nada que pagar." << RESET << endl;
                 } else {
@@ -2658,7 +2909,7 @@ void PageStore() {
                     }
                 }
                 break;
-            case 7:
+            case 8:
                 // Ver historial de compras
                 system("cls");
                 cout << BLUE << "========================================" << RESET << endl;
@@ -2684,7 +2935,7 @@ void PageStore() {
                     cout << YELLOW << "Total gastado: $" << fixed << setprecision(2) << usuarios[usuarioActualIndex].totalGastado << RESET << endl;
                 }
                 break;
-            case 8:
+            case 9:
                 cout << "Volviendo al menu principal..." << endl;
                 salirTienda = false;
                 break;
@@ -2693,7 +2944,7 @@ void PageStore() {
                 break;
         }
 
-        if (opcion != 8) {
+        if (opcion != 9) {
             cout << "Presione cualquier tecla para continuar...";
             getch();
         }
@@ -2754,6 +3005,9 @@ void PageLibrary() {
                 else if(juegoSeleccionado=="Juego de Buscaminas") {
                   playminas();
                 }
+                else if (juegoSeleccionado == "Juego del Ahorcado") {
+    			playAhorcado();
+				}
                 else {cout << RED << "Juego no reconocido." << RESET << endl;
                 }
             } else {
