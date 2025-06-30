@@ -2580,7 +2580,7 @@ void playSudoku() {
         return;
     }
     
-    system("cls");
+    system("cls"); // Limpia la pantalla inicial
     int tablero[9][9] = {
         {5, 3, 0, 0, 7, 0, 0, 0, 0},
         {6, 0, 0, 1, 9, 5, 0, 0, 0},
@@ -2596,59 +2596,92 @@ void playSudoku() {
     cout << BLUE << "Bienvenido al juego de Sudoku!" << RESET << endl;
     playerName = usuarios[usuarioActualIndex].username;
     cout << "Jugador: " << playerName << endl;
-    
-    // Mostrar record personal si existe
+    cout << YELLOW << "Presione 'Q' para salir" << RESET << endl << endl;
+
+    // Mostrar record si existe
     if (usuarios[usuarioActualIndex].puntuaciones.count("Juego de Sudoku")) {
-        cout << "Tu record: " << usuarios[usuarioActualIndex].puntuaciones["Juego de Sudoku"] << " sudokus completados" << endl;
-    } else {
-        cout << "Aun no tienes record en este juego" << endl;
+        cout << "Record actual: " << usuarios[usuarioActualIndex].puntuaciones["Juego de Sudoku"] << " sudokus completados" << endl;
     }
 
     while (!estaCompleto(tablero)) {
-        imprimirTablero(tablero);
+        system("cls"); // Limpia la pantalla en cada iteración
+        cout << BLUE << "Sudoku - Jugador: " << playerName << RESET << endl;
+        cout << YELLOW << "Presione 'Q' para salir" << RESET << endl << endl;
+        
+        imprimirTablero(tablero); // Imprime el tablero actualizado
+
+        cout << "\nIngrese fila (0-8): ";
+        string input;
+        cin >> input;
+        
+        if (input == "Q" || input == "q") {
+            cout << YELLOW << "\nPartida no completada. Saliendo..." << RESET << endl;
+            getch();
+            return;
+        }
 
         int fila, columna, num;
-        cout << "Ingrese la fila (0-8): ";
-        cin >> fila;
-        cout << "Ingrese la columna (0-8): ";
-        cin >> columna;
-        cout << "Ingrese el numero (1-9): ";
-        cin >> num;
-
-        if (fila < 0 || fila >= 9 || columna < 0 || columna >= 9 || num < 1 || num > 9) {
+        try {
+            fila = stoi(input);
+            cout << "Ingrese columna (0-8): ";
+            cin >> input;
+            columna = stoi(input);
+            cout << "Ingrese numero (1-9): ";
+            cin >> input;
+            num = stoi(input);
+        } catch (...) {
             cout << RED << "Entrada invalida. Intente de nuevo." << RESET << endl;
+            getch();
             continue;
         }
 
+        // Validar coordenadas
+        if (fila < 0 || fila >= 9 || columna < 0 || columna >= 9) {
+            cout << RED << "Coordenadas invalidas." << RESET << endl;
+            getch();
+            continue;
+        }
+
+        // Validar número
+        if (num < 1 || num > 9) {
+            cout << RED << "Numero debe ser entre 1-9." << RESET << endl;
+            getch();
+            continue;
+        }
+
+        // Verificar celda vacía
         if (tablero[fila][columna] != 0) {
-            cout << RED << "La celda ya tiene un numero. Intente de nuevo." << RESET << endl;
+            cout << RED << "Celda ocupada. Intente otra." << RESET << endl;
+            getch();
             continue;
         }
 
-        if (esValido(tablero, fila, columna, num)) {
-            tablero[fila][columna] = num;
-        } else {
-            cout << RED << "Movimiento invalido. Intente de nuevo." << RESET << endl;
+        // Verificar movimiento válido
+        if (!esValido(tablero, fila, columna, num)) {
+            cout << RED << "Movimiento invalido (conflicto con fila/columna/cuadrante)." << RESET << endl;
+            getch();
+            continue;
         }
+
+        tablero[fila][columna] = num; // Actualizar tablero
     }
 
-    cout << GREEN << "FELICIDADES COMPLETASTE EL SUDOKU!" << RESET << endl;
+    // Al completar el sudoku
+    system("cls");
+    cout << GREEN << "¡FELICIDADES! Sudoku completado." << RESET << endl;
+    imprimirTablero(tablero);
     
-    // Obtener record actual si existe
-    int sudokusCompletados = 1;
+    // Actualizar record
+    int nuevosCompletados = 1;
     if (usuarios[usuarioActualIndex].puntuaciones.count("Juego de Sudoku")) {
-        sudokusCompletados = usuarios[usuarioActualIndex].puntuaciones["Juego de Sudoku"] + 1;
+        nuevosCompletados = usuarios[usuarioActualIndex].puntuaciones["Juego de Sudoku"] + 1;
     }
-    
-    // Actualizar record en el usuario
-    actualizarRecord(usuarios[usuarioActualIndex], "Juego de Sudoku", sudokusCompletados);
+    actualizarRecord(usuarios[usuarioActualIndex], "Juego de Sudoku", nuevosCompletados);
     guardarUsuariosEnArchivo();
     
-    cout << "Sudokus completados: " << sudokusCompletados << endl;
-    imprimirTablero(tablero);
-    cout << "Presiona cualquier tecla para salir...";
+    cout << "\nSudokus completados: " << nuevosCompletados << endl;
+    cout << "Presione cualquier tecla para continuar...";
     getch();
-    system("cls");
 }
 
 /*
