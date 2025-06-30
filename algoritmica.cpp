@@ -426,11 +426,11 @@ void gestionarCoins() {
         cout << "Usuario: " << user.username << endl;
         cout << "Coins disponibles: " << GREEN << user.coins << RESET << endl;
         cout << BLUE << "----------------------------------------" << RESET << endl;
-        cout << "1. Comprar más coins" << endl;
+        cout << "1. Comprar mas coins" << endl;
         cout << "2. Ver historial de compras" << endl;
-        cout << "3. Volver al menú principal" << endl;
+        cout << "3. Volver al menu principal" << endl;
         cout << BLUE << "========================================" << RESET << endl;
-        cout << "Seleccione una opción: ";
+        cout << "Seleccione una opcion: ";
         
         int opcion;
         cin >> opcion;
@@ -475,7 +475,7 @@ void gestionarCoins() {
                         
                         cout << GREEN << "¡Compra exitosa! Ahora tienes " << user.coins << " coins." << RESET << endl;
                     } else {
-                        cout << RED << "El pago no se completó. No se añadieron coins." << RESET << endl;
+                        cout << RED << "El pago no se completo. No se añadieron coins." << RESET << endl;
                     }
                 }
                 break;
@@ -487,7 +487,7 @@ void gestionarCoins() {
                 salir = true;
                 break;
             default:
-                cout << RED << "Opción inválida." << RESET << endl;
+                cout << RED << "Opción invalida." << RESET << endl;
         }
         
         if (opcion != 3) {
@@ -2009,11 +2009,11 @@ void mostrarMenuAhorcado() {
     }
 
     cout << "Hola " << playerName << "! Estas son las reglas del juego:\n\n";
-    cout << "1. Se te presentará una palabra oculta de una categoría específica.\n";
+    cout << "1. Se te presentara una palabra oculta de una categoría especifica.\n";
     cout << "2. Debes adivinar las letras que componen la palabra.\n";
     cout << "3. Tienes 6 intentos para adivinar la palabra.\n";
-    cout << "4. Cada letra correcta revelará su posición en la palabra.\n";
-    cout << "5. Cada letra incorrecta reducirá tus intentos restantes.\n";
+    cout << "4. Cada letra correcta revelara su posicion en la palabra.\n";
+    cout << "5. Cada letra incorrecta reducira tus intentos restantes.\n";
     cout << "6. Si adivinas la palabra antes de quedarte sin intentos, ganas.\n";
     cout << "7. Cada palabra adivinada suma 100 puntos.\n";
     
@@ -2065,7 +2065,7 @@ void playAhorcado() {
         system("cls");
         
         // Seleccionar categoría
-        cout << "Selecciona una categoría:\n";
+        cout << "Selecciona una categoria:\n";
         int i = 1;
         for (const auto& categoria : palabrasPorCategoria) {
             cout << i << ". " << categoria.first << endl;
@@ -2179,8 +2179,8 @@ void playAhorcado() {
         guardarUsuariosEnArchivo();
     }
     
-    cout << "\nPuntuación final: " << puntuacionTotal << " puntos." << endl;
-    cout << "Presiona cualquier tecla para volver al menú...";
+    cout << "\nPuntuacion final: " << puntuacionTotal << " puntos." << endl;
+    cout << "Presiona cualquier tecla para volver al menu...";
     getch();
     system("cls");
 }
