@@ -98,10 +98,11 @@ struct Usuario {
     // Nuevos campos para sistema de pago
     vector<Compra> historialCompras; // Historial de compras realizadas
     double totalGastado;             // Total gastado en la tienda
+    int coins;                       // Monedas del usuario para compras en la tienda
 
     Usuario(string user = "", string pass = "") : username(user), password(pass), 
         totalPartidas(0), puntuacionTotal(0), avatar("??"), estado("Online"), 
-        colorPreferido("\033[32m"), biografia("Nuevo jugador"), totalGastado(0.0) {}
+        colorPreferido("\033[32m"), biografia("Nuevo jugador"), totalGastado(0.0), coins(0) {}
 };
 
 // Funcion para actualizar record de un usuario
@@ -121,6 +122,15 @@ void actualizarRecord(Usuario &user, const string &juego, int puntuacion) {
     }
 }
 
+// Funcion para obtener la fecha actual como string
+string obtenerFechaActual() {
+    time_t t = time(0);
+    struct tm* now = localtime(&t);
+    char buffer[80];
+    strftime(buffer, 80, "%d/%m/%Y %H:%M", now);
+    return string(buffer);
+}
+
 string playerName;
 vector<Usuario> usuarios;
 int usuarioActualIndex = -1;
@@ -133,6 +143,9 @@ int usuarioActualIndex = -1;
 #define BLUE "\033[34m"
 #define MAGENTA "\033[35m"
 #define CYAN "\033[36m"
+
+// Funcion principal para procesar pago con tarjeta
+
 
 // Funcion para validar numero de tarjeta usando algoritmo de Luhn
 bool validarNumeroTarjeta(const string& numero) {
@@ -192,6 +205,11 @@ string determinarTipoTarjeta(const string& numero) {
     return "Desconocida";
 }
 
+
+
+// Prototipo de función
+
+
 // Funcion para validar fecha de vencimiento
 bool validarFechaVencimiento(const string& fecha) {
     if (fecha.length() != 5 || fecha[2] != '/') {
@@ -229,43 +247,6 @@ bool validarFechaVencimiento(const string& fecha) {
     return true;
 }
 
-// Funcion para validar CVV
-bool validarCVV(const string& cvv, const string& tipoTarjeta) {
-    if (!all_of(cvv.begin(), cvv.end(), ::isdigit)) {
-        return false;
-    }
-    
-    if (tipoTarjeta == "American Express") {
-        return cvv.length() == 4;
-    } else {
-        return cvv.length() == 3;
-    }
-}
-
-// Funcion para validar nombre del titular
-bool validarNombreTitular(const string& nombre) {
-    if (nombre.length() < 2 || nombre.length() > 50) {
-        return false;
-    }
-    
-    return all_of(nombre.begin(), nombre.end(), 
-                  [](char c) { return isalpha(c) || c == ' '; });
-}
-
-// Funcion para obtener fecha actual como string
-string obtenerFechaActual() {
-    time_t t = time(0);
-    struct tm* now = localtime(&t);
-    char buffer[80];
-    strftime(buffer, 80, "%d/%m/%Y %H:%M", now);
-    return string(buffer);
-}
-
-// Funcion para generar numero de transaccion
-string generarNumeroTransaccion() {
-    return "TXN" + to_string(rand() % 900000 + 100000);
-}
-
 // Funcion para simular verificacion con banco
 bool verificarTarjetaConBanco(const TarjetaCredito) {
     cout << YELLOW << "Conectando con el banco";
@@ -292,7 +273,36 @@ bool verificarTarjetaConBanco(const TarjetaCredito) {
         return false;
     }
 }
-// Funcion principal para procesar pago con tarjeta
+
+// Funcion para generar numero de transaccion
+string generarNumeroTransaccion() {
+    return "TXN" + to_string(rand() % 900000 + 100000);
+}
+
+// Funcion para validar CVV
+bool validarCVV(const string& cvv, const string& tipoTarjeta) {
+    if (!all_of(cvv.begin(), cvv.end(), ::isdigit)) {
+        return false;
+    }
+    
+    if (tipoTarjeta == "American Express") {
+        return cvv.length() == 4;
+    } else {
+        return cvv.length() == 3;
+    }
+}
+
+// Funcion para validar nombre del titular
+bool validarNombreTitular(const string& nombre) {
+    if (nombre.length() < 2 || nombre.length() > 50) {
+        return false;
+    }
+    
+    return all_of(nombre.begin(), nombre.end(), 
+                  [](char c) { return isalpha(c) || c == ' '; });
+}
+
+// Funcion para procesar el pago con tarjeta de credito
 pair<bool, string> procesarPagoTarjeta(double monto) {
     TarjetaCredito tarjeta;
     
@@ -395,6 +405,96 @@ pair<bool, string> procesarPagoTarjeta(double monto) {
     cout << "Presione cualquier tecla para continuar...";
     getch();
     return make_pair(false, "");
+}
+
+// Funcion para gestionar coins (monedas) del usuario
+void gestionarCoins() {
+    if (usuarioActualIndex == -1) {
+        cout << RED << "Debe iniciar sesion primero." << RESET << endl;
+        getch();
+        return;
+    }
+    
+    Usuario& user = usuarios[usuarioActualIndex];
+    bool salir = false;
+    
+    while (!salir) {
+        system("cls");
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << YELLOW << "       GESTION DE COINS (MONEDAS)       " << RESET << endl;
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << "Usuario: " << user.username << endl;
+        cout << "Coins disponibles: " << GREEN << user.coins << RESET << endl;
+        cout << BLUE << "----------------------------------------" << RESET << endl;
+        cout << "1. Comprar más coins" << endl;
+        cout << "2. Ver historial de compras" << endl;
+        cout << "3. Volver al menú principal" << endl;
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << "Seleccione una opción: ";
+        
+        int opcion;
+        cin >> opcion;
+        
+        switch (opcion) {
+            case 1: {
+                system("cls");
+                cout << BLUE << "========================================" << RESET << endl;
+                cout << YELLOW << "          COMPRAR COINS              " << RESET << endl;
+                cout << BLUE << "========================================" << RESET << endl;
+                cout << "Paquetes disponibles:" << endl;
+                cout << "1. 100 coins - $5.00" << endl;
+                cout << "2. 250 coins - $10.00" << endl;
+                cout << "3. 500 coins - $18.00" << endl;
+                cout << "4. 1000 coins - $30.00" << endl;
+                cout << BLUE << "----------------------------------------" << RESET << endl;
+                cout << "Seleccione un paquete (1-4) o 0 para cancelar: ";
+                
+                int paquete;
+                cin >> paquete;
+                
+                if (paquete >= 1 && paquete <= 4) {
+                    double precios[] = {5.00, 10.00, 18.00, 30.00};
+                    int coins[] = {100, 250, 500, 1000};
+                    
+                    cout << "Procesando pago de $" << precios[paquete-1] << " por " 
+                         << coins[paquete-1] << " coins..." << endl;
+                    
+                    auto resultado = procesarPagoTarjeta(precios[paquete-1]);
+                    
+                    if (resultado.first) {
+                        user.coins += coins[paquete-1];
+                        user.totalGastado += precios[paquete-1];
+                        
+                        // Registrar la compra de coins
+                        Compra compraCoins;
+                        compraCoins.juego = "Recarga de " + to_string(coins[paquete-1]) + " coins";
+                        compraCoins.precio = precios[paquete-1];
+                        compraCoins.fecha = obtenerFechaActual();
+                        compraCoins.numeroTransaccion = resultado.second;
+                        user.historialCompras.push_back(compraCoins);
+                        
+                        cout << GREEN << "¡Compra exitosa! Ahora tienes " << user.coins << " coins." << RESET << endl;
+                    } else {
+                        cout << RED << "El pago no se completó. No se añadieron coins." << RESET << endl;
+                    }
+                }
+                break;
+            }
+            case 2:
+                // Mostrar historial (usar función existente)
+                break;
+            case 3:
+                salir = true;
+                break;
+            default:
+                cout << RED << "Opción inválida." << RESET << endl;
+        }
+        
+        if (opcion != 3) {
+            cout << "Presione cualquier tecla para continuar...";
+            getch();
+        }
+    }
 }
 
 // Funcion para dibujar figuras ASCII para avatares
@@ -1257,11 +1357,16 @@ void mostrarMenu() {
     cout << MAGENTA << "5. Personalizar Perfil" << RESET << endl;
     cout << MAGENTA << "6. Gestionar Amigos" << RESET << endl;
     
+    //Seccion Coins
+    cout << CYAN << "-- COINS --" << RESET << endl;
+    cout << GREEN << "7. Comprar Coins" << RESET << endl;
+    cout << GREEN << "8. Ver Saldo e Historial" << RESET << endl;
+
     // Seccion Sistema
     cout << CYAN << "-- SISTEMA --" << RESET << endl;
-    cout << YELLOW << "7. Ver Usuarios Registrados" << RESET << endl;
-    cout << YELLOW << "8. Limpiar Archivo Corrupto" << RESET << endl;
-    cout << YELLOW << "9. Cerrar Sesion" << RESET << endl;
+    cout << YELLOW << "9. Ver Usuarios Registrados" << RESET << endl;
+    cout << YELLOW << "10. Limpiar Archivo Corrupto" << RESET << endl;
+    cout << YELLOW << "11. Cerrar Sesion" << RESET << endl;
     cout << BLUE << "======================================" << RESET << endl;
 
     if (usuarioActualIndex != -1) {
@@ -1971,7 +2076,7 @@ void playAhorcado() {
         cout << "\nIngresa el número de la categoría: ";
         cin >> opcionCategoria;
         
-        if (opcionCategoria < 1 || opcionCategoria > palabrasPorCategoria.size()) {
+        if (opcionCategoria < 1 || static_cast<size_t>(opcionCategoria) > palabrasPorCategoria.size()) {
             cout << RED << "Opción inválida. Seleccionando categoría aleatoria..." << RESET << endl;
             opcionCategoria = rand() % palabrasPorCategoria.size() + 1;
             Sleep(2000);
@@ -2024,7 +2129,7 @@ void playAhorcado() {
             
             // Verificar si la letra está en la palabra
             bool letraAdivinada = false;
-            for (int i = 0; i < palabra.length(); i++) {
+            for (size_t i = 0; i < palabra.length(); i++) {
                 if (palabra[i] == letra) {
                     palabraAdivinada[i] = letra;
                     letraAdivinada = true;
@@ -2758,6 +2863,85 @@ void playminas() {
     system("cls");
 }
 
+// Funcion para comprar coins
+void comprarCoins() {
+    if (usuarioActualIndex == -1) {
+        cout << RED << "Debe iniciar sesion primero." << RESET << endl;
+        getch();
+        return;
+    }
+
+    Usuario& user = usuarios[usuarioActualIndex];
+    bool salir = false;
+    
+    while (!salir) {
+        system("cls");
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << YELLOW << "          COMPRAR COINS               " << RESET << endl;
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << "Usuario: " << user.username << endl;
+        cout << "Coins actuales: " << GREEN << user.coins << RESET << endl;
+        cout << BLUE << "----------------------------------------" << RESET << endl;
+        cout << "Paquetes disponibles:" << endl << endl;
+        cout << "1. 100 coins - $5.00" << endl;
+        cout << "2. 250 coins (+50 bonus) - $10.00" << endl;
+        cout << "3. 500 coins (+100 bonus) - $18.00" << endl;
+        cout << "4. 1000 coins (+300 bonus) - $30.00" << endl;
+        cout << BLUE << "----------------------------------------" << RESET << endl;
+        cout << "5. Volver al menú principal" << endl;
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << "Seleccione una opción: ";
+        
+        int opcion;
+        cin >> opcion;
+        
+        if (opcion >= 1 && opcion <= 4) {
+            double precios[] = {5.00, 10.00, 18.00, 30.00};
+            int coins[] = {100, 300, 600, 1300}; // Incluye bonificación
+            
+            cout << endl << "Está a punto de comprar " << coins[opcion-1] 
+                 << " coins por $" << fixed << setprecision(2) << precios[opcion-1] << endl;
+            cout << "¿Desea continuar? (s/n): ";
+            
+            char confirmacion;
+            cin >> confirmacion;
+            
+            if (tolower(confirmacion) == 's') {
+                auto resultado = procesarPagoTarjeta(precios[opcion-1]);
+                
+                if (resultado.first) {
+                    user.coins += coins[opcion-1];
+                    user.totalGastado += precios[opcion-1];
+                    
+                    // Registrar la compra
+                    Compra compraCoins;
+                    compraCoins.juego = "Paquete de " + to_string(coins[opcion-1]) + " coins";
+                    compraCoins.precio = precios[opcion-1];
+                    compraCoins.fecha = obtenerFechaActual();
+                    compraCoins.numeroTransaccion = resultado.second;
+                    user.historialCompras.push_back(compraCoins);
+                    
+                    cout << endl << GREEN << "¡Compra exitosa!" << RESET << endl;
+                    cout << "Se han añadido " << coins[opcion-1] << " coins a tu cuenta." << endl;
+                    cout << "Nuevo saldo: " << GREEN << user.coins << " coins" << RESET << endl;
+                } else {
+                    cout << endl << RED << "El pago no se completó. No se añadieron coins." << RESET << endl;
+                }
+            } else {
+                cout << endl << YELLOW << "Compra cancelada." << RESET << endl;
+            }
+        } else if (opcion == 5) {
+            salir = true;
+            continue;
+        } else {
+            cout << endl << RED << "Opción inválida." << RESET << endl;
+        }
+        
+        cout << endl << "Presione cualquier tecla para continuar...";
+        getch();
+    }
+}
+
 // Funcion para la tienda de juegos
 void PageStore() {
     if (usuarioActualIndex == -1) {
@@ -2770,43 +2954,43 @@ void PageStore() {
 
     int opcion;
     list<string> carrito;
-    bool salirTienda = true;
+    bool salirTienda = false;
+    Usuario& user = usuarios[usuarioActualIndex];
 
-    // Precios de los juegos
-    map<string, double> precios = {
-        {"Juego de Snake", 20.0},
-        {"Juego de Sudoku", 20.0},
-        {"Juego de Cuatro en Raya", 20.0},
-        {"Juego de Buscaminas", 20.0},
-        {"Juego del Ahorcado", 20.0}
+    // Precios de los juegos en coins
+    map<string, int> preciosCoins = {
+        {"Juego de Snake", 50},
+        {"Juego de Sudoku", 50},
+        {"Juego de Cuatro en Raya", 50},
+        {"Juego de Buscaminas", 50},
+        {"Juego del Ahorcado", 50}
     };
 
-    while (salirTienda == true) {
+    while (!salirTienda) {
         system("cls");
         cout << BLUE << "========================================" << RESET << endl;
         cout << BLUE << "            TIENDA DE JUEGOS            " << RESET << endl;
         cout << BLUE << "========================================" << RESET << endl;
         cout << endl;
         
+        // Mostrar información del usuario
+        cout << CYAN << "Usuario: " << user.username << RESET << endl;
+        cout << CYAN << "Coins disponibles: " << GREEN << user.coins << RESET << endl;
+        cout << BLUE << "----------------------------------------" << RESET << endl;
+        
         cout << CYAN << "Juegos disponibles:" << RESET << endl;
         cout << "----------------------------------------" << endl;
-        cout << "1. Juego de Snake - $20.00" << endl;
-        cout << "2. Juego de Sudoku - $20.00" << endl;
-        cout << "3. Juego de Cuatro en Raya - $20.00" << endl;
-        cout << "4. Juego de Buscaminas - $20.00" << endl;
-        cout << "5. Juego del Ahorcado - $20.00" << endl;
+        cout << "1. Juego de Snake - 50 coins" << endl;
+        cout << "2. Juego de Sudoku - 50 coins" << endl;
+        cout << "3. Juego de Cuatro en Raya - 50 coins" << endl;
+        cout << "4. Juego de Buscaminas - 50 coins" << endl;
+        cout << "5. Juego del Ahorcado - 50 coins" << endl;
         cout << "----------------------------------------" << endl;
-        cout << "6. Ver el carrito" << endl;
-        cout << "7. Proceder al pago" << endl;
-        cout << "8. Ver historial de compras" << endl;
+        cout << "6. Ver el carrito (" << carrito.size() << " items)" << endl;
+        cout << "7. Comprar juegos seleccionados" << endl;
+        cout << "8. Ver mis juegos comprados" << endl;
         cout << "9. Volver al menu principal" << endl;
-        cout << endl;
-        
-        // Mostrar informacion del usuario
-        cout << CYAN << "Usuario: " << usuarios[usuarioActualIndex].username << RESET << endl;
-        if (usuarios[usuarioActualIndex].totalGastado > 0) {
-            cout << CYAN << "Total gastado: $" << fixed << setprecision(2) << usuarios[usuarioActualIndex].totalGastado << RESET << endl;
-        }
+        cout << BLUE << "========================================" << RESET << endl;
         cout << endl;
         
         cout << "Seleccione una opcion: ";
@@ -2814,26 +2998,46 @@ void PageStore() {
 
         switch (opcion) {
             case 1:
-                cout << GREEN << "Juego de Snake agregado al carrito." << RESET << endl;
-                carrito.push_back("Juego de Snake");
+                if (find(user.games.begin(), user.games.end(), "Juego de Snake") == user.games.end()) {
+                    carrito.push_back("Juego de Snake");
+                    cout << GREEN << "Juego de Snake agregado al carrito." << RESET << endl;
+                } else {
+                    cout << YELLOW << "Ya posees este juego." << RESET << endl;
+                }
                 break;
             case 2:
-                cout << GREEN << "Juego de Sudoku agregado al carrito." << RESET << endl;
-                carrito.push_back("Juego de Sudoku");
+                if (find(user.games.begin(), user.games.end(), "Juego de Sudoku") == user.games.end()) {
+                    carrito.push_back("Juego de Sudoku");
+                    cout << GREEN << "Juego de Sudoku agregado al carrito." << RESET << endl;
+                } else {
+                    cout << YELLOW << "Ya posees este juego." << RESET << endl;
+                }
                 break;
             case 3:
-                cout << GREEN << "Juego de Cuatro en Raya agregado al carrito." << RESET << endl;
-                carrito.push_back("Juego de Cuatro en Raya");
+                if (find(user.games.begin(), user.games.end(), "Juego de Cuatro en Raya") == user.games.end()) {
+                    carrito.push_back("Juego de Cuatro en Raya");
+                    cout << GREEN << "Juego de Cuatro en Raya agregado al carrito." << RESET << endl;
+                } else {
+                    cout << YELLOW << "Ya posees este juego." << RESET << endl;
+                }
                 break;
             case 4:
-                cout << GREEN << "Juego de Buscaminas agregado al carrito." << RESET << endl;
-                carrito.push_back("Juego de Buscaminas");
+                if (find(user.games.begin(), user.games.end(), "Juego de Buscaminas") == user.games.end()) {
+                    carrito.push_back("Juego de Buscaminas");
+                    cout << GREEN << "Juego de Buscaminas agregado al carrito." << RESET << endl;
+                } else {
+                    cout << YELLOW << "Ya posees este juego." << RESET << endl;
+                }
                 break;
             case 5:
-            	cout << GREEN << "Juego de Ahorcado agregado al carrito." << RESET << endl;
-                carrito.push_back("Juego del Ahorcado");
+                if (find(user.games.begin(), user.games.end(), "Juego del Ahorcado") == user.games.end()) {
+                    carrito.push_back("Juego del Ahorcado");
+                    cout << GREEN << "Juego del Ahorcado agregado al carrito." << RESET << endl;
+                } else {
+                    cout << YELLOW << "Ya posees este juego." << RESET << endl;
+                }
                 break;
-            case 6:
+            case 6: {
                 system("cls");
                 cout << YELLOW << "========================================" << RESET << endl;
                 cout << YELLOW << "           CARRITO DE COMPRAS           " << RESET << endl;
@@ -2843,101 +3047,135 @@ void PageStore() {
                 if (carrito.empty()) {
                     cout << "El carrito esta vacio." << endl;
                 } else {
-                    double total = 0;
-                    cout << "Productos en el carrito:" << endl;
+                    int totalCoins = 0;
+                    cout << "Juegos en el carrito:" << endl;
                     cout << "----------------------------------------" << endl;
                     
                     for (const auto &item : carrito) {
-                        cout << "- " << item << " - $" << fixed << setprecision(2) << precios[item] << endl;
-                        total += precios[item];
+                        cout << "- " << item << " - " << preciosCoins[item] << " coins" << endl;
+                        totalCoins += preciosCoins[item];
                     }
                     
                     cout << "----------------------------------------" << endl;
-                    cout << YELLOW << "Total: $" << fixed << setprecision(2) << total << RESET << endl;
+                    cout << YELLOW << "Total: " << totalCoins << " coins" << RESET << endl;
+                    cout << "Tus coins disponibles: " << user.coins << endl;
+                    
+                    if (user.coins < totalCoins) {
+                        cout << RED << "Faltan " << (totalCoins - user.coins) 
+                             << " coins para completar la compra." << RESET << endl;
+                    }
+                    
+                    cout << endl << "1. Eliminar item del carrito" << endl;
+                    cout << "2. Vaciar carrito" << endl;
+                    cout << "3. Volver a la tienda" << endl;
+                    cout << "Seleccione una opcion: ";
+                    
+                    int opcionCarrito;
+                    cin >> opcionCarrito;
+                    
+                    if (opcionCarrito == 1 && !carrito.empty()) {
+                        cout << "Ingrese el numero del item a eliminar (1-" << carrito.size() << "): ";
+                        int itemEliminar;
+                        cin >> itemEliminar;
+                        
+                        if (itemEliminar > 0 && static_cast<size_t>(itemEliminar) <= carrito.size()) {
+                            auto it = carrito.begin();
+                            advance(it, itemEliminar - 1);
+                            cout << "Eliminando: " << *it << endl;
+                            carrito.erase(it);
+                        } else {
+                            cout << RED << "Numero invalido." << RESET << endl;
+                        }
+                    } else if (opcionCarrito == 2) {
+                        carrito.clear();
+                        cout << GREEN << "Carrito vaciado." << RESET << endl;
+                    }
                 }
                 break;
-            case 7:
+            }
+            case 7: {
                 if (carrito.empty()) {
-                    cout << RED << "El carrito esta vacio. No hay nada que pagar." << RESET << endl;
+                    cout << RED << "El carrito esta vacio. No hay nada que comprar." << RESET << endl;
                 } else {
-                    double total = 0;
+                    // Calcular total de coins necesarios
+                    int totalCoins = 0;
                     for (const auto &item : carrito) {
-                        total += precios[item];
+                        totalCoins += preciosCoins[item];
                     }
                     
-                    cout << GREEN << "Total a pagar: $" << fixed << setprecision(2) << total << RESET << endl;
-                    cout << "Procesando pago con tarjeta de credito..." << endl;
-                    cout << "Presione cualquier tecla para continuar...";
-                    getch();
+                    cout << "Resumen de compra:" << endl;
+                    cout << "----------------------------------------" << endl;
+                    for (const auto &item : carrito) {
+                        cout << "- " << item << " (" << preciosCoins[item] << " coins)" << endl;
+                    }
+                    cout << "----------------------------------------" << endl;
+                    cout << YELLOW << "Total a pagar: " << totalCoins << " coins" << RESET << endl;
+                    cout << "Tus coins disponibles: " << user.coins << endl;
                     
-                    // Procesar pago con tarjeta
-                    auto resultado = procesarPagoTarjeta(total);
-                    
-                    if (resultado.first) {
-                        // Pago exitoso
-                        cout << GREEN << "Compra realizada exitosamente!" << RESET << endl;
+                    if (user.coins >= totalCoins) {
+                        cout << "¿Confirmar compra? (s/n): ";
+                        char confirmar;
+                        cin >> confirmar;
                         
-                        // Agregar juegos a la biblioteca del usuario actual
-                        for (const auto &item : carrito) {
-                            bool yaExiste = false;
-                            for (const auto &game : usuarios[usuarioActualIndex].games) {
-                                if (game == item) {
-                                    yaExiste = true;
-                                    break;
+                        if (tolower(confirmar) == 's') {
+                            // Procesar la compra
+                            user.coins -= totalCoins;
+                            
+                            // Añadir juegos a la biblioteca
+                            for (const auto &item : carrito) {
+                                if (find(user.games.begin(), user.games.end(), item) == user.games.end()) {
+                                    user.games.push_back(item);
+                                    
+                                    // Registrar la compra en el historial
+                                    Compra compra;
+                                    compra.juego = item;
+                                    compra.precio = 0.0; // Pagado con coins
+                                    compra.fecha = obtenerFechaActual();
+                                    compra.numeroTransaccion = "COINS-" + generarNumeroTransaccion();
+                                    user.historialCompras.push_back(compra);
                                 }
                             }
-                            if (!yaExiste) {
-                                usuarios[usuarioActualIndex].games.push_back(item);
-                                
-                                // Registrar compra en historial
-                                Compra nuevaCompra;
-                                nuevaCompra.juego = item;
-                                nuevaCompra.precio = precios[item];
-                                nuevaCompra.fecha = obtenerFechaActual();
-                                nuevaCompra.numeroTransaccion = resultado.second;
-                                usuarios[usuarioActualIndex].historialCompras.push_back(nuevaCompra);
-                            }
+                            
+                            cout << GREEN << "¡Compra realizada con éxito!" << RESET << endl;
+                            cout << "Juegos añadidos a tu biblioteca." << endl;
+                            cout << "Nuevo saldo: " << user.coins << " coins" << endl;
+                            
+                            carrito.clear();
+                            guardarUsuariosEnArchivo();
+                        } else {
+                            cout << YELLOW << "Compra cancelada." << RESET << endl;
                         }
-                        
-                        // Actualizar total gastado
-                        usuarios[usuarioActualIndex].totalGastado += total;
-                        
-                        carrito.clear();
-                        guardarUsuariosEnArchivo();
-                        
-                        cout << GREEN << "Los juegos han sido agregados a tu biblioteca!" << RESET << endl;
+                    } else {
+                        cout << RED << "No tienes suficientes coins." << RESET << endl;
+                        cout << "Necesitas " << totalCoins << " coins (tienes " << user.coins << ")." << endl;
+                        cout << "Visita la sección 'Añadir Fondos' del menú principal para obtener más coins." << endl;
                     }
                 }
                 break;
-            case 8:
-                // Ver historial de compras
+            }
+            case 8: {
                 system("cls");
                 cout << BLUE << "========================================" << RESET << endl;
-                cout << BLUE << "         HISTORIAL DE COMPRAS           " << RESET << endl;
+                cout << BLUE << "         MIS JUEGOS COMPRADOS           " << RESET << endl;
                 cout << BLUE << "========================================" << RESET << endl;
                 cout << endl;
                 
-                if (usuarios[usuarioActualIndex].historialCompras.empty()) {
-                    cout << YELLOW << "No hay compras registradas." << RESET << endl;
+                if (user.games.empty()) {
+                    cout << YELLOW << "No has comprado ningún juego aún." << RESET << endl;
+                    cout << "Visita la tienda para adquirir juegos." << endl;
                 } else {
-                    cout << "Compras realizadas:" << endl;
+                    cout << "Tus juegos:" << endl;
                     cout << "----------------------------------------" << endl;
-                    
-                    for (const auto& compra : usuarios[usuarioActualIndex].historialCompras) {
-                        cout << "- " << compra.juego << endl;
-                        cout << "  Precio: $" << fixed << setprecision(2) << compra.precio << endl;
-                        cout << "  Fecha: " << compra.fecha << endl;
-                        cout << "  Transaccion: " << compra.numeroTransaccion << endl;
-                        cout << endl;
+                    for (const auto& juego : user.games) {
+                        cout << "- " << juego << endl;
                     }
-                    
                     cout << "----------------------------------------" << endl;
-                    cout << YELLOW << "Total gastado: $" << fixed << setprecision(2) << usuarios[usuarioActualIndex].totalGastado << RESET << endl;
+                    cout << "Total de juegos: " << user.games.size() << endl;
                 }
                 break;
+            }
             case 9:
-                cout << "Volviendo al menu principal..." << endl;
-                salirTienda = false;
+                salirTienda = true;
                 break;
             default:
                 cout << RED << "Opcion no valida. Intente nuevamente." << RESET << endl;
@@ -2950,6 +3188,61 @@ void PageStore() {
         }
     }
 }
+
+// Funcion para ver saldo e historial
+void verSaldoYHistorial() {
+    if (usuarioActualIndex == -1) {
+        cout << RED << "Debe iniciar sesion primero." << RESET << endl;
+        getch();
+        return;
+    }
+
+    const Usuario& user = usuarios[usuarioActualIndex];
+    bool salir = false;
+    
+    while (!salir) {
+        system("cls");
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << YELLOW << "       SALDO E HISTORIAL DE COINS      " << RESET << endl;
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << "Usuario: " << user.username << endl;
+        cout << "Coins disponibles: " << GREEN << user.coins << RESET << endl;
+        cout << BLUE << "----------------------------------------" << RESET << endl;
+        
+        // Mostrar solo transacciones relacionadas con coins
+        cout << "HISTORIAL DE COMPRAS DE COINS:" << endl;
+        cout << "----------------------------------------" << endl;
+        
+        bool hayHistorial = false;
+        for (const auto& compra : user.historialCompras) {
+            if (compra.juego.find("coins") != string::npos || 
+                compra.juego.find("Coins") != string::npos) {
+                cout << "- " << compra.juego << endl;
+                cout << "  Precio: $" << fixed << setprecision(2) << compra.precio << endl;
+                cout << "  Fecha: " << compra.fecha << endl;
+                cout << "  Transacción: " << compra.numeroTransaccion << endl << endl;
+                hayHistorial = true;
+            }
+        }
+        
+        if (!hayHistorial) {
+            cout << YELLOW << "No hay historial de compras de coins." << RESET << endl;
+        }
+        
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << "1. Volver al menú principal" << endl;
+        cout << BLUE << "========================================" << RESET << endl;
+        cout << "Seleccione una opción: ";
+        
+        int opcion;
+        cin >> opcion;
+        
+        if (opcion == 1) {
+            salir = true;
+        }
+    }
+}
+
 // Funcion para mostrar la biblioteca de juegos y permitir jugar
 void PageLibrary() {
     if (usuarioActualIndex == -1) {
@@ -3073,12 +3366,18 @@ int main() {
                                 gestionarAmigos();
                                 break;
                             case 7:
-                                mostrarUsuariosRegistrados();
+                                comprarCoins();
                                 break;
                             case 8:
-                                limpiarArchivoCorrupto();
+                                verSaldoYHistorial();
                                 break;
                             case 9:
+                                mostrarUsuariosRegistrados();
+                                break;
+                            case 10:
+                                limpiarArchivoCorrupto();
+                                break;
+                            case 11:
                                 cerrarSesion();
                                 getch();
                                 volverMenuInicial = true;
